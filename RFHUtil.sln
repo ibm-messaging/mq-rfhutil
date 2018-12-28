@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RFHUtil", "RFHUtil\RFHUtil.vcxproj", "{319ADF71-EED6-401E-B2AF-AA9F2373D1A2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{EC01C33C-4873-4A5A-8221-FE67320BB156}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{319ADF71-EED6-401E-B2AF-AA9F2373D1A2}.Debug|Win32.ActiveCfg = Release|Win32
+		{319ADF71-EED6-401E-B2AF-AA9F2373D1A2}.Debug|Win32.Build.0 = Release|Win32
+		{319ADF71-EED6-401E-B2AF-AA9F2373D1A2}.Release|Win32.ActiveCfg = Release|Win32
+		{319ADF71-EED6-401E-B2AF-AA9F2373D1A2}.Release|Win32.Build.0 = Release|Win32
+		{EC01C33C-4873-4A5A-8221-FE67320BB156}.Debug|Win32.ActiveCfg = Release|Win32
+		{EC01C33C-4873-4A5A-8221-FE67320BB156}.Debug|Win32.Build.0 = Release|Win32
+		{EC01C33C-4873-4A5A-8221-FE67320BB156}.Release|Win32.ActiveCfg = Release|Win32
+		{EC01C33C-4873-4A5A-8221-FE67320BB156}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59657549-534B-40AF-A8BA-2F503A4E1C84}
+	EndGlobalSection
+EndGlobal

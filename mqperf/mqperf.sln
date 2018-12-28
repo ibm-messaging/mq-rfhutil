@@ -1,0 +1,99 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqcapture", "mqcapture\mqcapture.vcxproj", "{B835DF2D-6F6F-4C80-9326-46B3A8F213BE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonSubs", "CommonSubs\CommonSubs.vcxproj", "{A054364C-0453-4EC5-91DA-7026B945E1CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqput2", "mqput2\mqput2.vcxproj", "{F40E97DE-E470-44E5-92AE-685E1110339C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqputs", "mqputs\mqputs.vcxproj", "{ED3403B2-A4A8-49DA-AF14-43345ACC0FD3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqtimes2", "mqtimes2\mqtimes2.vcxproj", "{2CC18869-97D0-4FE3-A0B1-7DC16CCEF241}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqtimes", "mqtimes\mqtimes.vcxproj", "{4395F629-DFF9-45F3-8C24-86A5A01EFC0A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqtimes3", "mqtimes3\mqtimes3.vcxproj", "{D566523B-EF05-4711-9075-E40A18B370E8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqlatency", "mqlatency\mqlatency.vcxproj", "{1CE76476-5938-45F1-8E61-4BFD9852F860}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqcapone", "mqcapone\mqcapone.vcxproj", "{C8A7E4E5-854B-46BC-9768-E82CCC703CE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqreply", "mqreply\mqreply.vcxproj", "{82F49364-18FE-4B30-8A62-0DF53A075985}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqtest", "mqtest\mqtest.vcxproj", "{E0E29BA1-9717-47EA-9390-2CF292C2F86A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mqcapsub", "mqcapsub\mqcapsub.vcxproj", "{6D950E00-C819-4530-A2B2-0AECA9F28CF5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A054364C-0453-4EC5-91DA-7026B945E1CA} = {A054364C-0453-4EC5-91DA-7026B945E1CA}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B835DF2D-6F6F-4C80-9326-46B3A8F213BE}.Release|Win32.ActiveCfg = Release|Win32
+		{B835DF2D-6F6F-4C80-9326-46B3A8F213BE}.Release|Win32.Build.0 = Release|Win32
+		{A054364C-0453-4EC5-91DA-7026B945E1CA}.Release|Win32.ActiveCfg = Release|Win32
+		{A054364C-0453-4EC5-91DA-7026B945E1CA}.Release|Win32.Build.0 = Release|Win32
+		{F40E97DE-E470-44E5-92AE-685E1110339C}.Release|Win32.ActiveCfg = Release|Win32
+		{F40E97DE-E470-44E5-92AE-685E1110339C}.Release|Win32.Build.0 = Release|Win32
+		{ED3403B2-A4A8-49DA-AF14-43345ACC0FD3}.Release|Win32.ActiveCfg = Release|Win32
+		{ED3403B2-A4A8-49DA-AF14-43345ACC0FD3}.Release|Win32.Build.0 = Release|Win32
+		{2CC18869-97D0-4FE3-A0B1-7DC16CCEF241}.Release|Win32.ActiveCfg = Release|Win32
+		{2CC18869-97D0-4FE3-A0B1-7DC16CCEF241}.Release|Win32.Build.0 = Release|Win32
+		{4395F629-DFF9-45F3-8C24-86A5A01EFC0A}.Release|Win32.ActiveCfg = Release|Win32
+		{4395F629-DFF9-45F3-8C24-86A5A01EFC0A}.Release|Win32.Build.0 = Release|Win32
+		{D566523B-EF05-4711-9075-E40A18B370E8}.Release|Win32.ActiveCfg = Release|Win32
+		{D566523B-EF05-4711-9075-E40A18B370E8}.Release|Win32.Build.0 = Release|Win32
+		{1CE76476-5938-45F1-8E61-4BFD9852F860}.Release|Win32.ActiveCfg = Release|Win32
+		{1CE76476-5938-45F1-8E61-4BFD9852F860}.Release|Win32.Build.0 = Release|Win32
+		{C8A7E4E5-854B-46BC-9768-E82CCC703CE5}.Release|Win32.ActiveCfg = Release|Win32
+		{C8A7E4E5-854B-46BC-9768-E82CCC703CE5}.Release|Win32.Build.0 = Release|Win32
+		{82F49364-18FE-4B30-8A62-0DF53A075985}.Release|Win32.ActiveCfg = Release|Win32
+		{82F49364-18FE-4B30-8A62-0DF53A075985}.Release|Win32.Build.0 = Release|Win32
+		{E0E29BA1-9717-47EA-9390-2CF292C2F86A}.Release|Win32.ActiveCfg = Release|Win32
+		{E0E29BA1-9717-47EA-9390-2CF292C2F86A}.Release|Win32.Build.0 = Release|Win32
+		{6D950E00-C819-4530-A2B2-0AECA9F28CF5}.Release|Win32.ActiveCfg = Release|Win32
+		{6D950E00-C819-4530-A2B2-0AECA9F28CF5}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80792658-A74A-473A-B485-05BE86B09B43}
+	EndGlobalSection
+EndGlobal

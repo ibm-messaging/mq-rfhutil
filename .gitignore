@@ -1,0 +1,28 @@
+
+# Visual Studio tracking directory
+.vs
+
+# Files created during the build by Visual Studio
+Client/Release
+Client/Debug
+
+RFHUtil/Release
+RFHUtil/Debug
+
+mqperf/*/Release
+mqperf/Release
+
+# More files created during the build by Visual Studio
+*.iobj
+*.ipdb
+*.pdb
+*.obj
+*.aps
+
+*.tlog/*
+
+# My tracking of status
+archive
+filelist
+TODO.txt
+DONE.txt

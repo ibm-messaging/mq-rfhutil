@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EC01C33C-4873-4A5A-8221-FE67320BB156}</ProjectGuid>
+    <RootNamespace>Client</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\Debug</OutDir>
+    <TargetName>rfhutilc</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)bin\Release\</OutDir>
+    <TargetName>rfhutilc</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;_WINDOWS;MQCLIENT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>c:\Program Files\IBM\MQ\Tools\C\Include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)rfhutilc$(TargetExt)</OutputFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS;_WINDOWS;MQCLIENT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>c:\Program Files\IBM\MQ\Tools\C\Include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)rfhutilc$(TargetExt)</OutputFile>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\RFHUtil\res\rfhutil.ico" />
+    <None Include="..\RFHUtil\res\rfhutilDoc.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\RFHUtil\CapPubs.h" />
+    <ClInclude Include="..\RFHUtil\CICS.h" />
+    <ClInclude Include="..\RFHUtil\comsubs.h" />
+    <ClInclude Include="..\RFHUtil\ConnUser.h" />
+    <ClInclude Include="..\RFHUtil\Copybook.h" />
+    <ClInclude Include="..\RFHUtil\DataArea.h" />
+    <ClInclude Include="..\RFHUtil\DisplayQ.h" />
+    <ClInclude Include="..\RFHUtil\DispQ.h" />
+    <ClInclude Include="..\RFHUtil\Dlq.h" />
+    <ClInclude Include="..\RFHUtil\General.h" />
+    <ClInclude Include="..\RFHUtil\Goto.h" />
+    <ClInclude Include="..\RFHUtil\HexFind.h" />
+    <ClInclude Include="..\RFHUtil\IdEdit.h" />
+    <ClInclude Include="..\RFHUtil\Ims.h" />
+    <ClInclude Include="..\RFHUtil\jms.h" />
+    <ClInclude Include="..\RFHUtil\JsonParse.h" />
+    <ClInclude Include="..\RFHUtil\LoadQ.h" />
+    <ClInclude Include="..\RFHUtil\MainFrm.h" />
+    <ClInclude Include="..\RFHUtil\MoveQ.h" />
+    <ClInclude Include="..\RFHUtil\MQMDPAGE.h" />
+    <ClInclude Include="..\RFHUtil\mqsubs.h" />
+    <ClInclude Include="..\RFHUtil\MSGDATA.h" />
+    <ClInclude Include="..\RFHUtil\MyComboBox.h" />
+    <ClInclude Include="..\RFHUtil\MyEdit.h" />
+    <ClInclude Include="..\RFHUtil\Names.h" />
+    <ClInclude Include="..\RFHUtil\other.h" />
+    <ClInclude Include="..\RFHUtil\Props.h" />
+    <ClInclude Include="..\RFHUtil\PS.h" />
+    <ClInclude Include="..\RFHUtil\pscr.h" />
+    <ClInclude Include="..\RFHUtil\PubSub.h" />
+    <ClInclude Include="..\RFHUtil\resource.h" />
+    <ClInclude Include="..\RFHUtil\RFH.h" />
+    <ClInclude Include="..\RFHUtil\rfhutil.h" />
+    <ClInclude Include="..\RFHUtil\rfhutilDoc.h" />
+    <ClInclude Include="..\RFHUtil\rfhutilView.h" />
+    <ClInclude Include="..\RFHUtil\Savemsgs.h" />
+    <ClInclude Include="..\RFHUtil\StdAfx.h" />
+    <ClInclude Include="..\RFHUtil\targetver.h" />
+    <ClInclude Include="..\RFHUtil\Usr.h" />
+    <ClInclude Include="..\RFHUtil\WritePubs.h" />
+    <ClInclude Include="..\RFHUtil\XMLParse.h" />
+    <ClInclude Include="..\RFHUtil\xmlsubs.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\RFHUtil\rfhutil.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\RFHUtil\CapPubs.cpp" />
+    <ClCompile Include="..\RFHUtil\CICS.cpp" />
+    <ClCompile Include="..\RFHUtil\comsubs.cpp" />
+    <ClCompile Include="..\RFHUtil\ConnUser.cpp" />
+    <ClCompile Include="..\RFHUtil\Copybook.cpp" />
+    <ClCompile Include="..\RFHUtil\DataArea.cpp" />
+    <ClCompile Include="..\RFHUtil\DisplayQ.cpp" />
+    <ClCompile Include="..\RFHUtil\DispQ.cpp" />
+    <ClCompile Include="..\RFHUtil\Dlq.cpp" />
+    <ClCompile Include="..\RFHUtil\General.cpp" />
+    <ClCompile Include="..\RFHUtil\Goto.cpp" />
+    <ClCompile Include="..\RFHUtil\HexFind.cpp" />
+    <ClCompile Include="..\RFHUtil\IdEdit.cpp" />
+    <ClCompile Include="..\RFHUtil\Ims.cpp" />
+    <ClCompile Include="..\RFHUtil\jms.cpp" />
+    <ClCompile Include="..\RFHUtil\JsonParse.cpp" />
+    <ClCompile Include="..\RFHUtil\LoadQ.cpp" />
+    <ClCompile Include="..\RFHUtil\MainFrm.cpp" />
+    <ClCompile Include="..\RFHUtil\MoveQ.cpp" />
+    <ClCompile Include="..\RFHUtil\MQMDPAGE.cpp" />
+    <ClCompile Include="..\RFHUtil\mqsubs.cpp" />
+    <ClCompile Include="..\RFHUtil\MSGDATA.cpp" />
+    <ClCompile Include="..\RFHUtil\MyComboBox.cpp" />
+    <ClCompile Include="..\RFHUtil\MyEdit.cpp" />
+    <ClCompile Include="..\RFHUtil\Names.cpp" />
+    <ClCompile Include="..\RFHUtil\other.cpp" />
+    <ClCompile Include="..\RFHUtil\Props.cpp" />
+    <ClCompile Include="..\RFHUtil\PS.cpp" />
+    <ClCompile Include="..\RFHUtil\pscr.cpp" />
+    <ClCompile Include="..\RFHUtil\PubSub.cpp" />
+    <ClCompile Include="..\RFHUtil\RFH.cpp" />
+    <ClCompile Include="..\RFHUtil\rfhutil.cpp" />
+    <ClCompile Include="..\RFHUtil\rfhutilDoc.cpp" />
+    <ClCompile Include="..\RFHUtil\rfhutilView.cpp" />
+    <ClCompile Include="..\RFHUtil\Savemsgs.cpp" />
+    <ClCompile Include="..\RFHUtil\StdAfx.cpp" />
+    <ClCompile Include="..\RFHUtil\Usr.cpp" />
+    <ClCompile Include="..\RFHUtil\WritePubs.cpp" />
+    <ClCompile Include="..\RFHUtil\XMLParse.cpp" />
+    <ClCompile Include="..\RFHUtil\xmlsubs.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="\vstudio2010\RFHUtil\RFHUtil\rfhutil.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
