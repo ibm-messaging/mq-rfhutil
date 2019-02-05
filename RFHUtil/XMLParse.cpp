@@ -279,8 +279,8 @@ int CXMLParse::parseXML(const char *xmlIn, int length)
 	int				nameLen;			// length of the name
 	int				len;				// work variable
 	int				parent=0;			// current parent element
-	int				currElem;			// current element
-	int				currAttr;			// current attribute
+	int				currElem = 0;			// current element
+	int				currAttr = 0;			// current attribute
 	int				numElems=0;			// number of elements
 	int				numAttrs=0;			// number of attributes
 	int				attrType;			// element type (attribute and type of quote used)
@@ -1923,7 +1923,7 @@ int CXMLParse::findOrInsertName(const char *name, const char *endName, int paren
 	int			inserted=0;				// set to 1 if name was inserted into the table - only used for trace
 	bool		notDone;				// working variable to see if loop is finished
 	const char	*occPtr;				// pointer to occurence number
-	char		occNumber[16];			// occurence as ascii characters
+	char		occNumber[16] = { 0 };			// occurence as ascii characters
 	CRfhutilApp *	app;				// pointer to application object - used for trace
 	char			traceInfo[512];		// work area for trace line
 
@@ -2691,7 +2691,7 @@ void CXMLParse::dumpNames()
 const char * CXMLParse::getErrorMsg(int returnCode)
 
 {
-	const char *	ptr;
+	const char *	ptr = "Unknown error";
 
 	// set a pointer to the error message
 	switch (returnCode)

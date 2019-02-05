@@ -880,8 +880,8 @@ int RFH::parseRFH(unsigned char *rfhptr, int msglength, int ccsid, int encoding)
 
 {
 	MQRFH	tempRFH;
-	char	tempEbcdic[MQ_FORMAT_LENGTH + 8];
-	char	tempFormat[MQ_FORMAT_LENGTH + 8];
+	char	tempEbcdic[MQ_FORMAT_LENGTH + 8] = { 0 };
+	char	tempFormat[MQ_FORMAT_LENGTH + 8] = { 0 };
 	char	*tempfield;
 	int		rfhlength=0;
 	int		i=0;
@@ -1346,8 +1346,8 @@ int RFH::parseRFH2(unsigned char *rfhptr, int msglength, int ccsid, int encoding
 
 {
 	MQRFH2	tempRFH;
-	char	tempEbcdic[MQ_FORMAT_LENGTH + 1];
-	char	tempfield[MQ_FORMAT_LENGTH + 4];
+	char	tempEbcdic[MQ_FORMAT_LENGTH + 1] = { 0 };
+	char	tempfield[MQ_FORMAT_LENGTH + 4] = { 0 };
 	int		rfhlength=0;
 	int		varlength=0;
 	int		charSet;
@@ -1555,6 +1555,9 @@ void RFH::parseRFH2data(unsigned char *rfhData, int dataLen, int ccsid, int enco
 				freePtr = ptr;
 			}
 
+			if (!ptr) {
+				break;
+			}
 			// remember the original length of the folder
 			// this is necessary in case the data is translated from UCS2 to multi-byte
 			saveOfs = segLen;
@@ -2003,10 +2006,10 @@ void RFH::parseRFH2mcd(unsigned char *rfhdata, int dataLen)
 	bool	more;
 	char	*ptr;
 	char	*endptr;
-	char	tempDomain[MAX_FORMAT_NAME + 1];
-	char	tempMsgType[MAX_FORMAT_NAME + 1];
-	char	tempMsgSet[MAX_FORMAT_NAME + 1];
-	char	tempMsgFmt[MAX_FORMAT_NAME + 1];
+	char	tempDomain[MAX_FORMAT_NAME + 1] = { 0 };
+	char	tempMsgType[MAX_FORMAT_NAME + 1] = { 0 };
+	char	tempMsgSet[MAX_FORMAT_NAME + 1] = { 0 };
+	char	tempMsgFmt[MAX_FORMAT_NAME + 1] = { 0 };
 	char	errmsg[64];
 	char	traceInfo[512];		// work variable to build trace message
 
@@ -2307,7 +2310,7 @@ int RFH::buildRFH2(int ccsid, int encoding)
 	convertRFH2Header(&tempRFH, encoding);
 
 	// finally, copy the fixed and variable parts of the data into the buffer
-	memcpy(tempbuf, tempRFH.StrucId, MQRFH_STRUC_LENGTH_FIXED_2);
+	memcpy(tempbuf, &tempRFH, MQRFH_STRUC_LENGTH_FIXED_2);
 
 	ptr = tempbuf + MQRFH_STRUC_LENGTH_FIXED_2;
 	if ((m_incl_mcd) && (m_rfh_mcd_len > 0))
@@ -2413,8 +2416,9 @@ int RFH::buildMcdArea(int ccsid, int encoding)
 	int				j;
 	wchar_t			*ucsPtr;
 	unsigned char	*tempPtr;
-	char			tempfield[MAX_RFH_LENGTH + 4];
-	char			tempValue[MAX_RFH_LENGTH + 4];
+	int tempLen = MAX_RFH_LENGTH + 4;
+	char			*tempfield = (char *)rfhMalloc(tempLen, "RFHMCDFD");
+	char			*tempValue = (char *)rfhMalloc(tempLen, "RFHMCDVL");
 	char			traceInfo[512];					// work variable to build trace message
 
 	if (pDoc->traceEnabled)
@@ -2436,8 +2440,7 @@ int RFH::buildMcdArea(int ccsid, int encoding)
 	// does the mcd area already exist?
 	if (NULL == rfh_mcd_area)
 	{
-		memset(tempfield, 0, sizeof(tempfield));
-
+		
 		// Add the first part of the XML headers
 		strcpy(tempfield, MQRFH2_MSG_CONTENT_FOLDER_B);
 
@@ -2550,6 +2553,11 @@ int RFH::buildMcdArea(int ccsid, int encoding)
 		}
 	}
 
+	if (tempfield)
+		rfhFree(tempfield);
+	if (tempValue)
+		rfhFree(tempValue);
+
 	if (pDoc->traceEnabled)
 	{
 		// create the trace line
@@ -2654,11 +2662,12 @@ int RFH::buildRFH(int ccsid, int encoding)
 	int				extra;
 	unsigned int	varlength=0;
 	MQRFH			tempRFH = {MQRFH_DEFAULT};
-	char			tempEbcdicfield[MAX_RFH_LENGTH + 4];
-	char			tempfield[MAX_RFH_LENGTH + 4];
-	char			tempFormat[MQ_FORMAT_LENGTH + 4];
-	unsigned char	tempbuf[MAX_RFH_LENGTH + 4];
+	char			tempFormat[MQ_FORMAT_LENGTH + 4] = { 0 };
 	char			traceInfo[512];		// work variable to build trace message
+	unsigned char	*tempbuf; 
+	char			*tempEbcdicfield;
+	char			*tempfield;
+	
 
 	if (pDoc->traceEnabled)
 	{
@@ -2693,6 +2702,10 @@ int RFH::buildRFH(int ccsid, int encoding)
 
 		return m_rfh1_data_len;
 	}
+
+	tempbuf = (unsigned char *)rfhMalloc(MAX_RFH_LENGTH + 4, "RFHTMPBF");
+	tempEbcdicfield = (char *)rfhMalloc(MAX_RFH_LENGTH + 4, "RFHTMPEB");
+	tempfield = (char *)rfhMalloc(MAX_RFH_LENGTH + 4, "RFHTMPFD");
 
 	// first, build the variable part of the RFH
 	memset(tempfield, 0, sizeof(tempfield));
@@ -2817,7 +2830,7 @@ int RFH::buildRFH(int ccsid, int encoding)
 	convertRFHeader(&tempRFH, encoding);
 
 	// finally, copy the fixed and variable parts of the data into the buffer
-	memcpy(tempbuf, tempRFH.StrucId, MQRFH_STRUC_LENGTH_FIXED);
+	memcpy(tempbuf, &tempRFH, MQRFH_STRUC_LENGTH_FIXED);
 
 	// check if we need to translate the variable part of the RFH
 	if (getCcsidType(ccsid) == CHAR_EBCDIC)
@@ -2832,6 +2845,10 @@ int RFH::buildRFH(int ccsid, int encoding)
 	// save the result
 	setRfh1Area(tempbuf, rfhlength, ccsid, encoding);
 
+	if (tempbuf) rfhFree(tempbuf);
+	if (tempEbcdicfield) rfhFree(tempEbcdicfield);
+	if (tempfield) rfhFree(tempfield);
+	
 	if (pDoc->traceEnabled)
 	{
 		// create the trace line
@@ -3314,9 +3331,10 @@ int RFH::buildRFH1header(unsigned char *header, int ccsid, int encoding)
 
 	if ((NULL == rfh1_data) || (ccsid != rfh1_data_ccsid) || (encoding != rfh1_data_encoding))
 	{
-		buildRFH(ccsid, encoding);
+		buildRFH(ccsid, encoding); // This assigns rfh1_data if necessary 
 	}
 
+#pragma warning(suppress: 6387)
 	memcpy(header, rfh1_data, m_rfh1_data_len);
 
 	if (pDoc->traceEnabled)
@@ -3377,6 +3395,7 @@ int RFH::buildRFH2header(unsigned char *header, int ccsid, int encoding)
 	}
 
 	// copy the RFH header to the message
+#pragma warning(suppress: 6387)
 	memcpy(header, rfh_data, m_rfh_data_len);
 
 	if (pDoc->traceEnabled)

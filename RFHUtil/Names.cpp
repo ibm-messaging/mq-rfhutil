@@ -60,12 +60,14 @@ static char THIS_FILE[]=__FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+#pragma warning(suppress: 26495)
 Names::Names()
 
 {
 	initialize(INITNAMETABLESIZE);
 }
 
+#pragma warning(suppress: 26495)
 Names::Names(int initSize)
 
 {
@@ -81,7 +83,7 @@ void Names::initialize(int initSize)
 	nextEntry = 1;
 	insertCount=0;
 	reallocCount=0;
-
+	
 	// try to allocate an initial name table
 	nameTable = AllocateTable(initSize);
 	if (nameTable != NULL)

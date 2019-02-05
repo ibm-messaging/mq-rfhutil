@@ -892,3 +892,7 @@
   * Fixed problem with channel tables not working
   * Changed format of channel table entries to preserve channel name and host name
   * Prevent duplicate QM entries in drop down list
+
+* Build 228(V9.1.1 build 228) Feb 4 2019
+  * Remove most of the warnings from VS 2017 code analysis 
+  * Fix issue #2 - Passwords not sent when using TLS

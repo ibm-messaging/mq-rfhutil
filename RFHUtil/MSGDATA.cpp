@@ -22,6 +22,11 @@ Jim MacNair - Initial Contribution
 #include "rfhutil.h"
 #include "MSGDATA.h"
 #include "rfhutilDoc.h"
+#include "comsubs.h"
+
+
+static char	*fontInfo = NULL;
+static char	*traceInfo = NULL;		// work variable to build trace message
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -53,6 +58,7 @@ MSGDATA::MSGDATA() : CPropertyPage(MSGDATA::IDD)
 	m_called_copybook = 0;
 	m_checkData = FALSE;
 	curDisplayResolution = 0;
+	pDoc = NULL;
 	//}}AFX_DATA_INIT
 
 	// initialize the tab stop locations
@@ -1438,8 +1444,14 @@ void MSGDATA::traceFont(CEdit *cedit, CFont *font)
 	char				*face;
 	char				*style;
 	char				*fullName;
-	char				fontInfo[16384];
-	char				traceInfo[16384];		// work variable to build trace message
+	
+
+	if (fontInfo == NULL) {
+		fontInfo = (char *)rfhMalloc(16384, "FONTINFO");
+	}
+	if (traceInfo == NULL) {
+		traceInfo = (char *)rfhMalloc(16384, "TRACINFO");
+	}
 
 	if (pDoc->traceEnabled)
 	{

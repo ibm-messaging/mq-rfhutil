@@ -174,6 +174,13 @@ CRfhutilView::CRfhutilView()
 	printerFont = NULL;
 	dpi = 0;
 	m_fontSize = 14;
+	lastChar = 0;
+	firstChar = 0;
+	prtLoc = 0;
+	prtLen = 0;
+	prtData = NULL;
+	maxLines = 0;
+	maxChars = 0;
 
 	// register our two special windows messages that are used for
 	// the find dialogs, which run as modeless dialogs
@@ -801,7 +808,7 @@ BOOL CRfhutilView::GetToolTipText(UINT id, NMHDR *pTTTStruct, LRESULT *pResult)
 //			lstrcpyn(pTTT->szText, strTipText, sizeof(pTTT->szText));
 
 			if (pTTTStruct->code == TTN_NEEDTEXTA)
-				lstrcpyn(pTTTA->szText, strTipText, sizeof(pTTTA->szText));
+				(void)lstrcpyn(pTTTA->szText, strTipText, sizeof(pTTTA->szText));
 			else
 				_mbstowcsz(pTTTW->szText, strTipText, sizeof(pTTTW->szText));
 			pResult = 0;
@@ -1871,14 +1878,14 @@ void CRfhutilView::OnUpdateSearchGoto(CCmdUI* pCmdUI)
 void CRfhutilView::findHelper(UINT wParam, LONG lParam)
 
 {
-	int		offset;
-	int		line;
-	int		ofs;
-	int		dType;
-	int		crlf;
-	int		edi;
-	int		BOM;
-	int		charCount;
+	int		offset = 0;
+	int		line = 0;
+	int		ofs = 0;
+	int		dType = 0;
+	int		crlf = 0;
+	int		edi = 0;
+	int		BOM = 0;
+	int		charCount = 0;
 	char	traceInfo[256];
 
 	CRfhutilApp *	app = (CRfhutilApp *)AfxGetApp();

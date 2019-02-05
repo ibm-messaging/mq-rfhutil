@@ -88,6 +88,7 @@ CCICS::CCICS() : CPropertyPage(CCICS::IDD)
 	cicsHeader = NULL;
 	cicsCcsid = -1;
 	cicsEncodeType = -1;
+	cicsLength = 0;
 	functionBoxInitialized = FALSE;
 }
 
@@ -294,7 +295,7 @@ int CCICS::parseCICSheader(unsigned char *cicsData, int dataLen, int ccsid, int 
 	int				err=0;
 	int				charType;
 	int				maxLen=MQCIH_LENGTH_2;
-	unsigned char	tempArea[32];
+	unsigned char	tempArea[32] = { 0 };
 	MQCIH			tempCIH;
 	CRfhutilApp*	app;
 	char	traceInfo[512];		// work variable to build trace message
@@ -757,7 +758,9 @@ int CCICS::buildCICSheader(unsigned char * header, int ccsid, int encodeType)
 	len = cicsLength;
 
 	// copy the header to the requested data area
-	memcpy(header, cicsHeader, cicsLength);
+	if (cicsHeader != NULL) {
+		memcpy(header, cicsHeader, cicsLength);
+	}
 
 	// only include the program name for prog type requests (default)
 	if ((cicsHeader != NULL) && (CIH_LINK_TRAN != m_CIH_link_type))

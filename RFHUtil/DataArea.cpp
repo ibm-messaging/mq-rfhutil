@@ -97,6 +97,13 @@ static char THIS_FILE[]=__FILE__;
 
 #define ADMINQ "SYSTEM.ADMIN.COMMAND.QUEUE\0"
 
+static char	xmlVarName[8192 + 1024];			// tag name
+static char	tempVarValue[2 * 8192 + 1024];	// tag value
+static char	tempVarName[8192 + 1];			// holding area for a tag name
+static char	tempEndVarName[8192 + 1];
+static char	tempVarAttr[2 * 8192 + 1];
+static char	xmlAttrStr[65536];
+
 ////////////////////////////////////
 //
 // Channel table header structure
@@ -2098,13 +2105,13 @@ void DataArea::getHexData()
 	// turn the file data into a hex format
 	unsigned char	*hexStr;
 	char			ch;				// work variable
-	int				i;				// work variable
-	int				k;				// work variable
+	int				i=0;				// work variable
+	int				k=0;				// work variable
 	UINT			len;			// length of required area to acquire
 	int				buffer=0;		// offset of the next character to processs
 	int				remaining;		// number of bytes left to process
 	int				offset;			// current location within the raw file data
-	int				count;			// number of characters on a particular line
+	int				count=0;			// number of characters on a particular line
 	int				location=0;		// offset of start of this line within the file
 	char			traceInfo[512];	// work variable to build trace message
 
@@ -2433,7 +2440,7 @@ int DataArea::xlateEbcdicChar(int fromCcsid, int toCcsid, const char *input, cha
 
 {
 	int			tcount=0;
-	char		defChar;
+	char		defChar = ' ';
 	wchar_t		ucsChar[4];		// area to translate one character
 
 	// try the translation using windows
@@ -4864,12 +4871,7 @@ void DataArea::getNameValueData(const unsigned char * input, int inputLen, unsig
 	// <varname/>
 	// <varname attr=value..> or <varname attr=value.../>
 	//
-	char	xmlVarName[8192+1024];			// tag name
-	char	tempVarValue[2 * 8192+1024];	// tag value
-	char	tempVarName[8192+1];			// holding area for a tag name
-	char	tempEndVarName[8192+1];
-	char	tempVarAttr[2 * 8192+1];
-	char	xmlAttrStr[65536];
+	
 	char	*errmsg=NULL;
 	unsigned char	*parsed_data=output;
 	unsigned char	*tempData;
@@ -7340,7 +7342,7 @@ int DataArea::appendPropsToBuffer(const char *namePtr, const char *valuePtr, int
 	int		totLen=0;
 	int		nameLen=0;
 	int		dataLen=0;
-	char	data[16];
+	char	data[32];
 	char	traceInfo[1024];		// work variable to build trace message
 
 	if (traceEnabled)
@@ -8898,7 +8900,7 @@ void DataArea::setOfs(CString &currentData, const int currentLevel)
 	int		i;
 	char	tempstr[11];
 
-	memset(tempstr, 0, sizeof(tempstr));
+	strcpy(tempstr, "");
 
 	// determine the number of blanks to insert,
 	// limiting to ten
@@ -9548,8 +9550,8 @@ CString DataArea::getCobolData(const int charFormat,
 {
 	CString	cobolData;	// string to hold ascii representation of data
 	int		rc;
-	int		maxVars;
-	int		maxSize;
+	int		maxVars = 0;
+	int		maxSize  = 0;
 	char	*textArea;
 	char	traceInfo[512];	// work variable to build trace message
 
@@ -10031,9 +10033,8 @@ void DataArea::printData(CEdit *cedit)
 
 {
 PRINTDLG pd;
-char	buffer[256];
+char	buffer[256] = { 0 };
 
-	memset (buffer, '\0', sizeof (buffer));
 	memset (&pd, '\0', sizeof (PRINTDLG));
 	pd.lStructSize = sizeof (PRINTDLG);
 
@@ -10046,8 +10047,10 @@ char	buffer[256];
 //
 	DWORD dwBytesReturned, dwBytesNeeded;
 	GetPrinter(hPrinter, 2, NULL, 0, &dwBytesNeeded);
-	PRINTER_INFO_2* pInfo2 = (PRINTER_INFO_2*)GlobalAlloc(GPTR,
-		dwBytesNeeded);
+	PRINTER_INFO_2* pInfo2 = (PRINTER_INFO_2*)GlobalAlloc(GPTR, dwBytesNeeded);
+	if (pInfo2 == NULL) {
+		return;
+	}
 	if (GetPrinter(hPrinter, 2, (LPBYTE)pInfo2, dwBytesNeeded,
 	   &dwBytesReturned) == 0)
 	{
@@ -10059,9 +10062,18 @@ char	buffer[256];
 //
 //	Use the DEVMODE to initialize the dialog box.
 //
-	HANDLE phDevMode = GlobalAlloc(GPTR, sizeof (DEVMODE));
-	DEVMODE *pTempDM = (DEVMODE *) GlobalLock (phDevMode);
-	memcpy (pTempDM, pInfo2->pDevMode, sizeof (DEVMODE));
+	HANDLE phDevMode;
+	DEVMODE *pTempDM;
+
+	phDevMode = GlobalAlloc(GPTR, sizeof(DEVMODE));
+	if (phDevMode == NULL)
+		return;
+
+	pTempDM = (DEVMODE *)GlobalLock(phDevMode);
+	if (pTempDM == NULL)
+		return;
+
+	memcpy(pTempDM, pInfo2->pDevMode, sizeof(DEVMODE));
 	pd.hDevMode = phDevMode;
 	if (!PrintDlg (&pd))
 	{
@@ -10070,8 +10082,10 @@ char	buffer[256];
 	}
 
 	DEVMODE* pDevMode = (DEVMODE*)GlobalLock(pd.hDevMode);
-	strcpy (buffer, (char *) pDevMode->dmDeviceName);
-	GlobalUnlock(pd.hDevMode);
+	if (pDevMode) {
+		strcpy(buffer, (char *)pDevMode->dmDeviceName);
+		GlobalUnlock(pd.hDevMode);
+	}
 
 	pd.hDC = CreateDC (NULL, buffer, NULL, NULL);
 
@@ -10551,7 +10565,9 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 			cd.StrucLength = MQCD_LENGTH_7;
 
 			// use version 4 so that the SSL information is picked up
-			cno.Version = MQCNO_VERSION_4;
+			if (cno.Version < MQCNO_VERSION_4) {
+				cno.Version = MQCNO_VERSION_4;
+			}
 
 			if (traceEnabled)
 			{
@@ -11160,7 +11176,7 @@ bool DataArea::openQ(LPCTSTR Queue, LPCTSTR RemoteQM, int openType, BOOL passAll
 
 {
 	bool		result=false;
-	MQLONG		cc;
+	MQLONG		cc = MQCC_OK;
 	MQLONG		rc;
 	MQLONG		openOpt=0;
 	MQLONG		cc2=MQCC_OK;							// MQ completion code from MQINQ
@@ -11745,8 +11761,8 @@ bool DataArea::explicitOpen(LPCTSTR Queue, LPCTSTR RemoteQM, int openType)
 void DataArea::closeQ(MQLONG options)
 
 {
-	MQLONG		cc;
-	MQLONG		rc;
+	MQLONG		cc = MQCC_OK;
+	MQLONG		rc = MQRC_NONE;
 	MQLONG		closeOptions=MQCO_NONE;
 	char		traceInfo[512];		// work variable to build trace message
 
@@ -12132,7 +12148,7 @@ int DataArea::getLineNumber(int ofs, int dataFormat, int crlf, int edi, int BOM)
 
 {
 	int					line=0;
-	int					maxChar;
+	int					maxChar = 0;
 	unsigned char *		ptr;
 	unsigned char *		endptr;
 
@@ -13883,7 +13899,7 @@ void DataArea::saveMsgs(SAVEPARMS * parms)
 	char		*msgData=NULL;			// pointer to message data
 	char		*buffer=NULL;			// buffer to hold message properties
 	MQMDPAGE	*mqmdObj=(MQMDPAGE *)mqmdData;
-	FILE		*outputFile;			// output file
+	FILE		*outputFile = NULL;		// output file
 	CRfhutilApp *app;					// pointer to MFC application object
 	bool		noErr=true;				// error switch - terminate processing after error
 	bool		errMsgSet=false;		// error text has been set
@@ -13895,7 +13911,7 @@ void DataArea::saveMsgs(SAVEPARMS * parms)
 	MQDMHO		dOpts={MQDMHO_DEFAULT};		// options used to delete message handle
 	char		auditTxt[32];			// work area to build audit message
 	char		errtxt[256];			// message work area
-	char		newFileName[512];		// file name to open - needed for one file per message option
+	char		newFileName[512] = { 0 };	// file name to open - needed for one file per message option
 	char		traceInfo[512];			// work variable to build trace message
 
 	if (propertiesSupported && (MQ_PROPS_YES == m_mq_props))
@@ -14686,7 +14702,9 @@ void DataArea::saveMsgs(SAVEPARMS * parms)
 	}
 
 	// close the last file
-	fclose(outputFile);
+	if (outputFile != NULL) {
+		fclose(outputFile);
+	}
 
 	// check if message properties are to be processed
 	if (propertiesSupported && (MQ_PROPS_YES == m_mq_props) && (hMsg != MQHM_UNUSABLE_HMSG))
@@ -16191,7 +16209,7 @@ int DataArea::findMsgProperties(MQHMSG hMsg, unsigned char *propData, int propLe
 	int				byteCount=0;					// number of byte array values
 	int				nullCount=0;					// number of null values
 	int				defCount=0;						// number of unrecognized values
-	int				valueLen;						// length of the value to be added to the message handle
+	int				valueLen = 0;					// length of the value to be added to the message handle
 	int				type;							// MQ property type
 	int				i4;								// 32-bit floating point value
 	float			fp4;							// 32-bit floating point value
@@ -17998,7 +18016,7 @@ MQLONG DataArea::PutAdminMsg(MQCHAR8 MsgFormat, char *UserMsg, MQLONG UserMsgLen
 MQLONG DataArea::closeAdminQ(MQLONG * reason)
 
 {
-	MQLONG		cc;						// MQ completion code
+	MQLONG		cc = MQCC_OK;						// MQ completion code
 	char		traceInfo[128];			// work variable to build trace message
 
 	// is the Admin Q open?
@@ -20279,7 +20297,7 @@ int DataArea::nameToType(char *name)
 int DataArea::pubWriteMsgAddProps(WRITEPARMS *parms, MQHMSG hMsg)
 
 {
-	size_t			valueLen;						// length of property value
+	size_t			valueLen = 0;					// length of property value
 	size_t			i;								// work variable
 	char *	ptr;									// pointer to message properties
 	const char *	endPtr;							// end of message properties
@@ -20291,7 +20309,7 @@ int DataArea::pubWriteMsgAddProps(WRITEPARMS *parms, MQHMSG hMsg)
 	MQLONG			cc=MQCC_OK;						// MQ completion code
 	MQLONG			cc2=MQCC_OK;					// MQ completion code
 	MQLONG			rc=MQRC_NONE;					// MQ reason code
-	MQLONG			type;							// property type
+	MQLONG			type= MQTYPE_STRING;			// property type
 	int				propCount=0;					// number of user properties found
 	int				i4=0;							// four byte integer value
 	int				chgTopic=0;						// used for trace to indicate topic was changed
@@ -20721,7 +20739,7 @@ MQLONG DataArea::pubWriteMsg(WRITEPARMS *parms)
 	MQLONG			rc2=MQRC_NONE;					// MQ reason code
 	MQHMSG			hMsg=MQHM_UNUSABLE_HMSG;		// message handle used to set message properties
 	int				tempOpt;
-	int				propCount;						// number of message properties added to handle
+	int				propCount=0;					// number of message properties added to handle
 	MQMD2			mqmd={MQMD2_DEFAULT};			// Message descriptor
 	MQPMO			pmo={MQPMO_DEFAULT};			// Put message options
 	MQCMHO			opts={MQCMHO_DEFAULT};			// options used to create message handle
@@ -23271,12 +23289,18 @@ int DataArea::loadMQdll()
 	BOOL	foundMQ71=FALSE;
 	const char *	libName;
 	char	mqmPath[512];
-	char	newPath[4096 * 16];			// twice the maximum size of the environment on Windows 2008
+	char	*newPath = NULL;			
+	int     newPathLen = 4096 * 16;      // twice the maximum size of the environment on Windows 2008
 	char	traceInfo[640];				// work variable to build trace message
 
 	// initialize the mqmPath variable
 	memset(mqmPath, 0, sizeof(mqmPath));
-	memset(newPath, 0, sizeof(newPath));
+	
+	newPath = (char *)rfhMalloc(newPathLen, "NEWPATH1");
+	if (!newPath) {
+		return -1;
+	}
+	memset(newPath, 0, newPathLen);
 
 #ifdef MQCLIENT
 	libName = "mqic32.dll";
@@ -23384,6 +23408,10 @@ int DataArea::loadMQdll()
 	if ((XMQCrtMh != NULL) && (XMQDltMh != NULL) && (XMQInqMp != NULL) && (XMQSetMp != NULL))
 	{
 		propertiesSupported = TRUE;
+	}
+
+	if (newPath) {
+		rfhFree(newPath);
 	}
 
 	if (traceEnabled)
@@ -24029,6 +24057,7 @@ const char * DataArea::getMQ71serverInstPath()
 
 	// initialize higest version
 	memset(VRMF, 0, sizeof(VRMF));
+	strcpy(VRMF, ""); // Visual Studio code analyser doesn't understand memset and gives "might not be zero-terminated" warning
 
 	// point to the first MQ 7.1 installation
 	instTab = firstInstallation;
@@ -24277,7 +24306,7 @@ int DataArea::processLocalQMgrs()
 	QmgrInstTable *	nextQMgr;
 	char	*ptr;
 	char	*qmName;
-	char	buffer[128 * 1024];
+	char	*buffer = NULL;
 	SECURITY_ATTRIBUTES saAttr;
 	BOOL	fSuccess;
 	char	traceInfo[512];			// work variable to build trace message
@@ -24332,7 +24361,10 @@ int DataArea::processLocalQMgrs()
 	}
 
 	// Read from pipe that is the standard output for child process.
-	memset(buffer, 0, sizeof(buffer));
+	buffer = (char *)rfhMalloc(128 * 1024, "BUFSTOUT");
+	if (!buffer) {
+		return -5;
+	}
 
 	// Read output from the child process, and write to parent's STDOUT.
 	if( !ReadFile( hChildStdoutRdDup, buffer, sizeof(buffer) - 1, &dwRead, NULL))
@@ -24351,138 +24383,145 @@ int DataArea::processLocalQMgrs()
 
 	// now process the data buffer
 	i = 0;
-	while (i < charsRead)
-	{
-		ptr = buffer + i;
-		while ((i < charsRead) && (buffer[i] != '\n'))
+	if (charsRead >= 2) {
+		while (i < charsRead)
 		{
-			i++;
-		}
-
-		if (i <= charsRead)
-		{
-			// terminate the string
-			buffer[i] = 0;
-
-			if (traceEnabled)
+			ptr = buffer + i;
+			while ((i < charsRead) && (buffer[i] != '\n'))
 			{
-				// create the trace line
-				sprintf(traceInfo, "input buffer=%s", buffer);
-
-				// write trace entry
-				logTraceEntry(traceInfo);
+				i++;
 			}
 
-			// check for a QMName entry
-			if (memcmp(ptr, "QMNAME(", 7) == 0)
+			if (i <= charsRead)
 			{
-				// get the queue manager name and create an entry for it
-				qmName = ptr + 7;
+				// terminate the string
+				buffer[i] = 0;
 
-				// look for the end of the queue manager name
-				ptr = strchr(qmName, ')');
-				if (ptr != NULL)
+				if (traceEnabled)
 				{
-					// terminate the queue manager name
-					ptr[0] = 0;
-					ptr++;
+					// create the trace line
+					sprintf(traceInfo, "input buffer=%s", buffer);
 
-					// create a control block entry for this qm
-					nextQMPtr = allocateNameStruct(qmName, "QMgr");
+					// write trace entry
+					logTraceEntry(traceInfo);
+				}
 
-					// check that the allocations worked
-					if (nextQMPtr != NULL)
+				// check for a QMName entry
+				if (dwRead >= 7 && memcmp(ptr, "QMNAME(", 7) == 0)
+				{
+					// get the queue manager name and create an entry for it
+					qmName = ptr + 7;
+
+					// look for the end of the queue manager name
+					ptr = strchr(qmName, ')');
+					if (ptr != NULL)
 					{
-						// Insert queue manager name into the list
-						nextQMPtr->nextQM = queueNamesRoot;
-						queueNamesRoot = nextQMPtr;
+						// terminate the queue manager name
+						ptr[0] = 0;
+						ptr++;
 
-						// check the status of the queue manager
-						// first, skip any intervening blanks
-						while (' ' == ptr[0])
+						// create a control block entry for this qm
+						nextQMPtr = allocateNameStruct(qmName, "QMgr");
+
+						// check that the allocations worked
+						if (nextQMPtr != NULL)
 						{
-							ptr++;
-						}
+							// Insert queue manager name into the list
+							nextQMPtr->nextQM = queueNamesRoot;
+							queueNamesRoot = nextQMPtr;
 
-						// create a qmgr table entry
-						nextQMgr = CreateQMgrInstEntry(ptr, qmName);
-
-						// check if create worked
-						if (nextQMgr != NULL)
-						{
-							// check if this is a standby queue manager
-							if (nextQMgr->isStandby)
+							// check the status of the queue manager
+							// first, skip any intervening blanks
+							while (' ' == ptr[0])
 							{
-								// queue manager in standby state
-								// therefore, do not try to connect
-								nextQMPtr->names->insertName(" <Standby QM - press Load Names to retry>");
-								nextQMPtr->count++;
-								qmStandby++;
-
-								if (traceEnabled)
-								{
-									// trace queue manager status
-									sprintf(traceInfo, "QM status is standby for %s", qmName);
-
-									// enter trace info
-									logTraceEntry(traceInfo);
-								}
+								ptr++;
 							}
-							else if (nextQMgr->isRunning)
+
+							// create a qmgr table entry
+							nextQMgr = CreateQMgrInstEntry(ptr, qmName);
+
+							// check if create worked
+							if (nextQMgr != NULL)
 							{
-								// queue manager is running
-								// count used in trace entry
-								qmRunning++;
-
-								// use PCF messages to get the list of queue names
-								ret = getQueueNames(qmName);
-
-								// check if any queues were found before
-								if (0 == nextQMPtr->count)
+								// check if this is a standby queue manager
+								if (nextQMgr->isStandby)
 								{
-									// error trying to load the names and no queue names found
-									// display an error message rather than queue names
-									nextQMPtr->names->insertName(" <No Queues found - press Load Names to retry>");
+									// queue manager in standby state
+									// therefore, do not try to connect
+									nextQMPtr->names->insertName(" <Standby QM - press Load Names to retry>");
 									nextQMPtr->count++;
-								}
-							}
-							else
-							{
-								// queue manager in Ended state - probably not running
-								// therefore, do not try to connect
-								nextQMPtr->names->insertName(" <QM is not available - press Load Names to retry>");
-								nextQMPtr->count++;
-								qmStopped++;
+									qmStandby++;
 
-								if (traceEnabled)
+									if (traceEnabled)
+									{
+										// trace queue manager status
+										sprintf(traceInfo, "QM status is standby for %s", qmName);
+
+										// enter trace info
+										logTraceEntry(traceInfo);
+									}
+								}
+								else if (nextQMgr->isRunning)
 								{
-									// trace queue manager status
-									sprintf(traceInfo, "QM status is not availble for %s", qmName);
+									// queue manager is running
+									// count used in trace entry
+									qmRunning++;
 
-									// enter trace info
-									logTraceEntry(traceInfo);
+									// use PCF messages to get the list of queue names
+									ret = getQueueNames(qmName);
+
+									// check if any queues were found before
+									if (0 == nextQMPtr->count)
+									{
+										// error trying to load the names and no queue names found
+										// display an error message rather than queue names
+										nextQMPtr->names->insertName(" <No Queues found - press Load Names to retry>");
+										nextQMPtr->count++;
+									}
+								}
+								else
+								{
+									// queue manager in Ended state - probably not running
+									// therefore, do not try to connect
+									nextQMPtr->names->insertName(" <QM is not available - press Load Names to retry>");
+									nextQMPtr->count++;
+									qmStopped++;
+
+									if (traceEnabled)
+									{
+										// trace queue manager status
+										sprintf(traceInfo, "QM status is not availble for %s", qmName);
+
+										// enter trace info
+										logTraceEntry(traceInfo);
+									}
 								}
 							}
-						}
 
-						if (traceEnabled)
-						{
-							// create the trace line
-							sprintf(traceInfo, "Queue count=%d for QMgr %s", nextQMPtr->count, qmName);
+							if (traceEnabled)
+							{
+								// create the trace line
+								sprintf(traceInfo, "Queue count=%d for QMgr %s", nextQMPtr->count, qmName);
 
-							// enter trace info
-							logTraceEntry(traceInfo);
+								// enter trace info
+								logTraceEntry(traceInfo);
+							}
 						}
 					}
 				}
 			}
-		}
 
-		// move on to the next entry
-		while ((buffer[i] <= ' ') && (i < charsRead))
-		{
-			i++;
+			// move on to the next entry
+#pragma warning(suppress: 6385)
+			while ((buffer[i] <= ' ') && (i < charsRead))
+			{
+				i++;
+			}
 		}
+	}
+
+	if (buffer) {
+		rfhFree(buffer);
 	}
 
 	if (traceEnabled)
@@ -24494,7 +24533,7 @@ int DataArea::processLocalQMgrs()
 		logTraceEntry(traceInfo);
 	}
 #endif
-
+	
 	return 0;
 }
 

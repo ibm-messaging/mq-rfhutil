@@ -25,7 +25,7 @@ Jim MacNair - Initial Contribution
 #include "rfhutilView.h"
 
 #ifdef _DEBUG
-#depne new DEBUG_NEW
+#define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif

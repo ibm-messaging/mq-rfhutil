@@ -45,6 +45,7 @@ CHexFind::CHexFind(CWnd* pParent /*=NULL*/)
 	terminating = FALSE;
 	findPressed = FALSE;
 	m_direction = SEARCH_DOWN;		// down is default
+	helperMsg = NULL;
 }
 
 

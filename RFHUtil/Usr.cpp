@@ -55,6 +55,7 @@ Usr::Usr() :CPropertyPage(Usr::IDD)
 	m_rfh_usr_ccsid = -1;
 	m_rfh_usr_encoding = -1;
 	usrDataChanged = false;
+	pDoc = NULL;
 }
 
 Usr::~Usr()

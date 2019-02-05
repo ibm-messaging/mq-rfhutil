@@ -8,6 +8,7 @@ Client/Debug
 
 RFHUtil/Release
 RFHUtil/Debug
+bin/Debug
 
 mqperf/*/Release
 mqperf/Release
@@ -18,6 +19,7 @@ mqperf/Release
 *.pdb
 *.obj
 *.aps
+*.lastcodeanalysis*
 
 *.tlog/*
 

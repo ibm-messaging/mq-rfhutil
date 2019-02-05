@@ -111,7 +111,7 @@ BOOL MyEdit::PreTranslateMessage(MSG* pMsg)
 						nStart = nEnd - 1;
 
 						// check if it is a CR or LF character
-						if ((value[nStart] != '\n') || (value[nStart] != '\n'))
+						if ((value[nStart] != '\n') && (value[nStart] != '\r'))
 						{
 							// delete the character
 							value.Delete(nStart, 1);
@@ -122,7 +122,7 @@ BOOL MyEdit::PreTranslateMessage(MSG* pMsg)
 							value.Delete(nStart, 1);
 
 							// check for a second character in front of this one
-							if ((nStart > 0) && (((value[nStart-1] == '\n') || (value[nStart-1] == '\n'))))
+							if ((nStart > 0) && (((value[nStart-1] == '\n') || (value[nStart-1] == '\r'))))
 							{
 								// delete the CR or LF character
 								value.Delete(nStart-1, 1);

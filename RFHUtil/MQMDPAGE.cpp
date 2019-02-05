@@ -583,7 +583,7 @@ void MQMDPAGE::updateIdFields()
 void MQMDPAGE::setMaxFieldLengths(int dispType)
 
 {
-	UINT	fieldSize;
+	UINT	fieldSize = 0;
 	char	traceInfo[512];		// work variable to build trace message
 
 	switch (m_id_disp_ascii)
@@ -1454,7 +1454,7 @@ void MQMDPAGE::processMessageMQMD(MQMD2 * mqmd)
 	char	tempUser[16];		// Area to copy the user id into
 	char	tempAppData[48];	// Work area to copy the application identity and origin
 	char	tempAcctToken[72];	// Accounting token in hex
-	char	tempQName[64];		// Work area for Queue and Queue Manager names
+	char	tempQName[64] = { 0 };		// Work area for Queue and Queue Manager names
 	char	traceInfo[512];		// work variable to build trace message
 
 	if (pDoc->traceEnabled)
@@ -1701,7 +1701,7 @@ void MQMDPAGE::SetId(MQBYTE24 * id, int idType)
 
 {
 	int				i;
-	unsigned char	tempStr[2 * MQ_CORREL_ID_LENGTH + 12];
+	unsigned char	tempStr[2 * MQ_CORREL_ID_LENGTH + 12] = { 0 };
 	char			traceInfo[512];		// work variable to build trace message
 
 	if (pDoc->traceEnabled)

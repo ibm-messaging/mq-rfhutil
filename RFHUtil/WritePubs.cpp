@@ -76,6 +76,9 @@ WritePubs::WritePubs(CWnd* pParent /*=NULL*/)
 	pDoc=NULL;
 	thread = NULL;
 	exitCode=STILL_ACTIVE;
+	parms = NULL;
+	m_hAccel = NULL;
+	helperMsg = 0;
 
 	// select default options
 	m_new_msgid = app->psWriteNewMsgid;

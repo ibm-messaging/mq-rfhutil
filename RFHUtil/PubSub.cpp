@@ -1895,22 +1895,22 @@ void PubSub::parseRFH2pubsub(unsigned char *rfhdata, int dataLen)
 	int		idx=0;
 	char	*ptr;
 	char	*endptr;
-	char	tempCommand[32];
-	char	tempRegOpt[32];
-	char	tempPubOpt[32];
-	char	tempDelOpt[32];
-	char	tempTopic1[MAX_PUBSUB_NAME];
-	char	tempTopic2[MAX_PUBSUB_NAME];
-	char	tempTopic3[MAX_PUBSUB_NAME];
-	char	tempTopic4[MAX_PUBSUB_NAME];
-	char	tempSubPoint[MAX_PUBSUB_NAME];
-	char	tempFilter[MAX_PUBSUB_NAME];
-	char	tempUser[16384];
-	char	tempQMgrName[64];
-	char	tempQName[64];
-	char	tempPubTime[64];
-	char	tempSeqNum[32];
-	char	traceInfo[512];		// work variable to build trace message
+	char	tempCommand[32] = { 0 };
+	char	tempRegOpt[32] = { 0 };
+	char	tempPubOpt[32] = { 0 };
+	char	tempDelOpt[32] = { 0 };
+	char	*tempTopic1 = (char *)rfhMalloc(MAX_PUBSUB_NAME, "TMPTOPC1");
+	char	*tempTopic2 = (char *)rfhMalloc(MAX_PUBSUB_NAME, "TMPTOPC2");
+	char	*tempTopic3 = (char *)rfhMalloc(MAX_PUBSUB_NAME, "TMPTOPC3");
+	char	*tempTopic4 = (char *)rfhMalloc(MAX_PUBSUB_NAME, "TMPTOPC4");
+	char	*tempSubPoint = (char *)rfhMalloc(MAX_PUBSUB_NAME, "TMPSUBPT");
+	char	*tempFilter = (char *)rfhMalloc(MAX_PUBSUB_NAME, "TMPFILTR");
+	char	*tempUser = (char *)rfhMalloc(16384, "TMPUSER1");
+	char	tempQMgrName[64] = { 0 };
+	char	tempQName[64] = { 0 };
+	char	tempPubTime[64] = { 0 };
+	char	tempSeqNum[32] = { 0 };
+	char	traceInfo[512] = { 0 };		// work variable to build trace message
 
 	// make sure we have current info
 	UpdateData(TRUE);
@@ -1943,17 +1943,11 @@ void PubSub::parseRFH2pubsub(unsigned char *rfhdata, int dataLen)
 	memset(tempRegOpt, 0, sizeof(tempRegOpt));
 	memset(tempPubOpt, 0, sizeof(tempPubOpt));
 	memset(tempDelOpt, 0, sizeof(tempDelOpt));
-	memset(tempTopic1, 0, sizeof(tempTopic1));
-	memset(tempTopic2, 0, sizeof(tempTopic2));
-	memset(tempTopic3, 0, sizeof(tempTopic3));
-	memset(tempTopic4, 0, sizeof(tempTopic4));
-	memset(tempSubPoint, 0, sizeof(tempSubPoint));
-	memset(tempFilter, 0, sizeof(tempFilter));
+	
 	memset(tempQMgrName, 0, sizeof(tempQMgrName));
 	memset(tempQName, 0, sizeof(tempQName));
 	memset(tempPubTime, 0, sizeof(tempPubTime));
 	memset(tempSeqNum, 0, sizeof(tempSeqNum));
-	memset(tempUser, 0, sizeof(tempUser));
 
 	// Search for the RFH pub/sub fields in the pub/sub folder
 	ptr = (char *)rfhdata + 5;
@@ -2111,6 +2105,14 @@ void PubSub::parseRFH2pubsub(unsigned char *rfhdata, int dataLen)
 
 	// Update the data in the controls
 	UpdateData (FALSE);
+
+	if (tempTopic1) rfhFree(tempTopic1);
+	if (tempTopic2) rfhFree(tempTopic2);
+	if (tempTopic3) rfhFree(tempTopic3);
+	if (tempTopic4) rfhFree(tempTopic4);
+	if (tempSubPoint)rfhFree(tempSubPoint);
+	if (tempFilter) rfhFree(tempFilter);
+	if (tempUser)   rfhFree(tempUser);
 
 	if (pDoc->traceEnabled)
 	{

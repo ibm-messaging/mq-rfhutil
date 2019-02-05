@@ -468,22 +468,21 @@ void CPS::OnPsSubscribe()
 	CRfhutilApp *	app;										// pointer to MFC application object
 	char			qName[MQ_Q_NAME_LENGTH+8];					// work area to retrieve the name of the managed queue
 	char			topicName[MQ_TOPIC_NAME_LENGTH+8];			// work area to retrieve the name of the topic
-	char			topic[MQ_TOPIC_STR_LENGTH+8];				// work area to retrieve the topic string
-	char			userData[MQ_TOPIC_STR_LENGTH+8];			// work area for user data - for now make same length as topic string since there is no defined constant
 	char			applIdent[MQ_APPL_IDENTITY_DATA_LENGTH+8];	// application identity to use for msgs published for this subscription
 	char			acctToken[MQ_ACCOUNTING_TOKEN_LENGTH+8];	// accounting token to use for msgs published for this subscription
-	char			selection[MQ_SELECTOR_LENGTH+8];			// selection string
+
+	char			*topic = (char *)rfhMalloc(MQ_TOPIC_STR_LENGTH + 8, "PSONPSTP");				// work area to retrieve the topic string
+	char			*userData = (char *)rfhMalloc(MQ_TOPIC_STR_LENGTH + 8, "PSONPSUD");			// work area for user data - for now make same length as topic string since there is no defined constant
+	char			*selection = (char *)rfhMalloc(MQ_SELECTOR_LENGTH+8, "PSONPSSL");			// selection string
+
 	SUBPARMS		parms;										// parameters area to pass to subscribe function
 
 	// User has pressed the Subscribe button
 	// initialize some variables
 	memset(qName, 0, sizeof(qName));
 	memset(topicName, 0, sizeof(topicName));
-	memset(topic, 0, sizeof(topic));
-	memset(userData, 0, sizeof(userData));
 	memset(applIdent, 0, sizeof(applIdent));
 	memset(acctToken, 0, sizeof(acctToken));
-	memset(selection, 0, sizeof(selection));
 	memset(&parms, 0, sizeof(parms));
 	parms.correlId = &m_correlid;
 
@@ -556,7 +555,7 @@ void CPS::OnPsSubscribe()
 	parms.applIdent = applIdent;
 	parms.acctToken = acctToken;
 	parms.userData = userData;
-	parms.userDataBufSize = sizeof(userData)-8;
+	parms.userDataBufSize = MQ_TOPIC_STR_LENGTH;
 	parms.resumeTopicName = topicName;
 	parms.durable = m_ps_durable;
 	parms.managed = m_ps_managed;
@@ -617,6 +616,12 @@ void CPS::OnPsSubscribe()
 
 	// set the buttons to match the subscription status
 	setSubscriptionButtons();
+
+	if (topic) rfhFree(topic);
+	if (userData) rfhFree(userData);
+	if (selection) rfhFree(selection);
+
+	return;
 }
 
 void CPS::OnPsResume() 
@@ -625,25 +630,24 @@ void CPS::OnPsResume()
 	MQLONG			cc=MQCC_OK;									// results of subscribe call
 	int				userDataLength=0;							// length of user data area
 	CRfhutilApp *	app;										// pointer to MFC application object
-	char			qName[MQ_Q_NAME_LENGTH+8];					// work area to retrieve the name of the managed queue
-	char			topicName[MQ_TOPIC_NAME_LENGTH+8];			// work area to retrieve the name of the topic
-	char			topic[MQ_TOPIC_STR_LENGTH+8];				// work area to retrieve the topic string
-	char			userData[MQ_TOPIC_STR_LENGTH+8];			// work area for user data - for now make same length as topic string since there is no defined constant
-	char			applIdent[MQ_APPL_IDENTITY_DATA_LENGTH+8];	// application identity to use for msgs published for this subscription
-	char			acctToken[MQ_ACCOUNTING_TOKEN_LENGTH+8];	// accounting token to use for msgs published for this subscription
-	char			selection[MQ_SELECTOR_LENGTH+8];			// selection string
-	char			tempToken[2*MQ_ACCOUNTING_TOKEN_LENGTH+8];	// work area for binary to hex conversion
+	char			qName[MQ_Q_NAME_LENGTH + 8] = { 0 };					// work area to retrieve the name of the managed queue
+	char			topicName[MQ_TOPIC_NAME_LENGTH + 8] = { 0 };			// work area to retrieve the name of the topic
+	char			applIdent[MQ_APPL_IDENTITY_DATA_LENGTH+8] = { 0 };	// application identity to use for msgs published for this subscription
+	char			acctToken[MQ_ACCOUNTING_TOKEN_LENGTH+8] = { 0 };	// accounting token to use for msgs published for this subscription
+	char			tempToken[2*MQ_ACCOUNTING_TOKEN_LENGTH+8] = { 0 };	// work area for binary to hex conversion
+
+	char			*topic = (char *)rfhMalloc(MQ_TOPIC_STR_LENGTH + 8, "PSONRSTP");				// work area to retrieve the topic string
+	char			*userData = (char *)rfhMalloc(MQ_TOPIC_STR_LENGTH + 8, "PSONRSUD");			// work area for user data - for now make same length as topic string since there is no defined constant
+	char			*selection = (char *)rfhMalloc(MQ_SELECTOR_LENGTH + 8, "PSONRSSL");			// selection string
+
 	SUBPARMS		parms;										// parameters area to pass to subscribe function
 
 	// User has pressed the Resume button
-	// initialize some variables
+	// initialize stack variables
 	memset(qName, 0, sizeof(qName));
-	memset(topicName, 0, sizeof(topicName));
-	memset(topic, 0, sizeof(topic));
-	memset(userData, 0, sizeof(userData));
+	memset(topicName, 0, sizeof(topicName));	
 	memset(applIdent, 0, sizeof(applIdent));
 	memset(acctToken, 0, sizeof(acctToken));
-	memset(selection, 0, sizeof(selection));
 	memset(&parms, 0, sizeof(parms));
 	parms.correlId = &m_correlid;
 
@@ -668,12 +672,12 @@ void CPS::OnPsResume()
 	parms.topicName = topicName;
 	parms.subName = (LPCTSTR)m_ps_subname;
 	parms.selection = selection;
-	parms.maxSelLen = sizeof(selection)-1;
+	parms.maxSelLen = MQ_SELECTOR_LENGTH;
 	parms.applIdent = applIdent;
 	parms.acctToken = acctToken;
 	parms.userData = userData;
 	parms.userDataLength = 0;
-	parms.userDataBufSize = sizeof(userData)-8;
+	parms.userDataBufSize = MQ_TOPIC_STR_LENGTH;
 	parms.resumeTopicName = topicName;
 
 	// process the subscription
@@ -800,6 +804,12 @@ void CPS::OnPsResume()
 
 	// set the buttons to match the subscription status
 	setSubscriptionButtons();
+
+	if (topic) rfhFree(topic);
+	if (userData) rfhFree(userData);
+	if (selection) rfhFree(selection);
+
+	return;
 }	
 
 void CPS::OnPsAlterSub() 
@@ -807,25 +817,22 @@ void CPS::OnPsAlterSub()
 {
 	MQLONG		cc=MQCC_OK;									// results of subscribe call
 	int			userDataLength=0;							// length of user data area
-	char		qName[MQ_Q_NAME_LENGTH+8];					// work area to retrieve the name of the managed queue
-	char		topicName[MQ_TOPIC_NAME_LENGTH+8];			// work area to retrieve the name of the topic
-	char		topic[MQ_TOPIC_STR_LENGTH+8];				// work area to retrieve the topic string
-	char		userData[MQ_TOPIC_STR_LENGTH+8];			// work area for user data - for now make same length as topic string since there is no defined constant
-	char		applIdent[MQ_APPL_IDENTITY_DATA_LENGTH+8];	// application identity to use for msgs published for this subscription
-	char		acctToken[MQ_ACCOUNTING_TOKEN_LENGTH+8];	// accounting token to use for msgs published for this subscription
-	char		selection[MQ_SELECTOR_LENGTH+8];			// selection string
-	char		tempToken[2*MQ_ACCOUNTING_TOKEN_LENGTH+8];	// work area for binary to hex conversion
+	char		qName[MQ_Q_NAME_LENGTH+8] = { 0 };					// work area to retrieve the name of the managed queue
+	char		topicName[MQ_TOPIC_NAME_LENGTH+8] = { 0 };			// work area to retrieve the name of the topic
+	char		applIdent[MQ_APPL_IDENTITY_DATA_LENGTH+8] = { 0 };	// application identity to use for msgs published for this subscription
+	char		acctToken[MQ_ACCOUNTING_TOKEN_LENGTH+8] = { 0 };	// accounting token to use for msgs published for this subscription
+	char		tempToken[2*MQ_ACCOUNTING_TOKEN_LENGTH+8] = { 0 };	// work area for binary to hex conversion
+	char			*topic = (char *)rfhMalloc(MQ_TOPIC_STR_LENGTH + 8, "PSONPSTP");				// work area to retrieve the topic string
+	char			*userData = (char *)rfhMalloc(MQ_TOPIC_STR_LENGTH + 8, "PSONPSUD");			// work area for user data - for now make same length as topic string since there is no defined constant
+	char			*selection = (char *)rfhMalloc(MQ_SELECTOR_LENGTH + 8, "PSONPSSL");			// selection string
 	SUBPARMS	parms;										// parameters area to pass to subscribe function
 
 	// User has pressed the alter button
-	// initialize some variables
+	// initialize the stack variables - rfhMalloc has already initialised heap-allocated buffers
 	memset(qName, 0, sizeof(qName));
-	memset(topicName, 0, sizeof(topicName));
-	memset(topic, 0, sizeof(topic));
-	memset(userData, 0, sizeof(userData));
+	memset(topicName, 0, sizeof(topicName));	
 	memset(applIdent, 0, sizeof(applIdent));
 	memset(acctToken, 0, sizeof(acctToken));
-	memset(selection, 0, sizeof(selection));
 	memset(&parms, 0, sizeof(parms));
 	parms.correlId = &m_correlid;
 
@@ -896,12 +903,12 @@ void CPS::OnPsAlterSub()
 	parms.topicName = topicName;
 	parms.subName = (LPCTSTR)m_ps_subname;
 	parms.selection = selection;
-	parms.maxSelLen = sizeof(selection)-1;
+	parms.maxSelLen = MQ_SELECTOR_LENGTH;
 	parms.applIdent = applIdent;
 	parms.acctToken = acctToken;
 	parms.userData = userData;
 	parms.userDataLength = userDataLength;
-	parms.userDataBufSize = sizeof(userData)-8;
+	parms.userDataBufSize = MQ_TOPIC_STR_LENGTH;
 	parms.resumeTopicName = topicName;
 	parms.durable = m_ps_durable;
 	parms.managed = m_ps_managed;
@@ -1004,6 +1011,12 @@ void CPS::OnPsAlterSub()
 
 	// set the buttons to match the subscription status
 	setSubscriptionButtons();
+
+	if (topic) rfhFree(topic);
+	if (userData) rfhFree(userData);
+	if (selection) rfhFree(selection);
+
+	return;
 }
 
 /////////////////////////////////////////////////////////
@@ -1595,7 +1608,7 @@ void CPS::SetSubCorrelId(MQBYTE24 *id)
 
 {
 	int				i;
-	unsigned char	tempStr[2 * MQ_CORREL_ID_LENGTH + 16];
+	unsigned char	tempStr[2 * MQ_CORREL_ID_LENGTH + 16] = { 0 };
 	char			traceInfo[512];								// work variable to build trace message
 
 	if (pDoc->traceEnabled)

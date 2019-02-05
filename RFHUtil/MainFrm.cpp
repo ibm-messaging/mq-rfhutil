@@ -46,6 +46,7 @@ END_MESSAGE_MAP()
 
 CMainFrame::CMainFrame()
 {
+	memset(strTitle, 0, sizeof(strTitle));
 }
 
 CMainFrame::~CMainFrame()

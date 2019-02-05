@@ -59,6 +59,8 @@ CLoadQ::CLoadQ(CWnd* pParent /*=NULL*/)
 	m_batchSize = _T("");
 	m_waitTime = _T("");
 	m_write_once = FALSE;
+	m_single_file = FALSE;
+	m_hAccel = NULL;
 	//}}AFX_DATA_INIT
 
 	m_use_set_all = TRUE;
@@ -72,6 +74,7 @@ CLoadQ::CLoadQ(CWnd* pParent /*=NULL*/)
 
 	// set default to write once
 	m_write_once = TRUE;
+	memset(strTitle, 0, sizeof(strTitle));
 }
 
 

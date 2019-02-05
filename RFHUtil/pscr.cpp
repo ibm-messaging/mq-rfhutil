@@ -61,6 +61,7 @@ pscr::pscr() : CPropertyPage(pscr::IDD)
 	m_RFH_pscr_encoding = -1;
 	rfh_pscr_area = NULL;
 	pscrDataChanged = 0;
+	pDoc = NULL;
 }
 
 pscr::~pscr()
@@ -477,13 +478,13 @@ void pscr::parseRFH2pscr(unsigned char *rfhdata, int dataLen)
 	int		found;
 	char	*ptr;
 	char	*endptr;
-	char	tempReply[32];
-	char	tempReason1[32];
-	char	tempReason2[32];
-	char	tempResponse1[8192];
-	char	tempResponse2[8192];
-	char	tempOther[8192];
-	char	traceInfo[512];		// work variable to build trace message
+	char	*tempReply = (char *)rfhMalloc(32, "PROPSRPL");
+	char	*tempReason1 = (char *)rfhMalloc(32, "PROPSRN1");
+	char	*tempReason2 = (char *)rfhMalloc(32, "PROPSRN2");
+	char	*tempResponse1 = (char *)rfhMalloc(8192, "PROPSRP1");
+	char	*tempResponse2 = (char *)rfhMalloc(8192, "PROPSRP2");
+	char	*tempOther = (char *)rfhMalloc(8192, "PROPSOTH");
+	char	traceInfo[512] = { 0 };		// work variable to build trace message
 
 	if (pDoc->traceEnabled)
 	{
@@ -499,14 +500,6 @@ void pscr::parseRFH2pscr(unsigned char *rfhdata, int dataLen)
 
 	// reset the current values
 	clearPSCRdata();
-
-	// initialize fields
-	memset(tempReply, 0, sizeof(tempReply));
-	memset(tempReason1, 0, sizeof(tempReason1));
-	memset(tempReason2, 0, sizeof(tempReason2));
-	memset(tempResponse1, 0, sizeof(tempResponse1));
-	memset(tempResponse2, 0, sizeof(tempResponse2));
-	memset(tempOther, 0, sizeof(tempOther));
 
 	// Search for the RFH pub/sub fields in the pub/sub folder
 	ptr = (char *)rfhdata + 6;		// skip the pscr tag
@@ -637,6 +630,14 @@ void pscr::parseRFH2pscr(unsigned char *rfhdata, int dataLen)
 
 	// update the form data from the instance variables
 	UpdateData(FALSE);
+
+	// Free the allocated buffers
+	if (tempReason1) rfhFree(tempReason1);
+	if (tempReason2) rfhFree(tempReason2);
+	if (tempResponse1) rfhFree(tempResponse1);
+	if (tempResponse2) rfhFree(tempResponse2);
+	if (tempOther)	rfhFree(tempOther);
+	if (tempReply) rfhFree(tempReply);
 
 	if (pDoc->traceEnabled)
 	{

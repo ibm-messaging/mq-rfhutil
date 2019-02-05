@@ -45,6 +45,7 @@ CConnUser::CConnUser(CWnd* pParent /*=NULL*/)
 	m_security_data = _T("");
 	m_local_address = _T("");
 	m_conn_use_csp = FALSE;
+	m_hAccel = NULL;
 	//}}AFX_DATA_INIT
 }
 

@@ -239,7 +239,7 @@ int CJsonParse::parseJSON(const char *jsonIn, int length)
 const char * CJsonParse::parseLevel(const char *ptr, const char *endPtr, int parent)
 
 {
-	int				name;
+	int				name = 0;
 	const char *	namePtr;				// pointer to element name
 	const char *	endNamePtr;				// pointer to end of name
 	const char *	valuePtr;				// pointer to value

@@ -85,6 +85,7 @@ jms::jms() : CPropertyPage(jms::IDD)
 	jms_data_encoding = -1;
 	rfh_jms_area = NULL;
 	jmsDataChanged = false;
+	pDoc = NULL;
 }
 
 jms::~jms()
@@ -503,16 +504,17 @@ void jms::parseRFH2jms(unsigned char *rfhdata, int dataLen)
 	int		idx;
 	char	*ptr;
 	char	*endptr;
-	char	tempRto[MAX_JMS_NAME];
-	char	tempDst[MAX_JMS_NAME];
-	char	tempCid[MAX_JMS_NAME];
-	char	tempGid[MAX_JMS_NAME];
-	char	tempSeq[MAX_JMS_NAME];
-	char	tempExp[MAX_JMS_NAME];
-	char	tempPri[MAX_JMS_NAME];
-	char	tempDlv[MAX_JMS_NAME];
-	char	tempTms[MAX_JMS_NAME];
-	char	tempUser[16384];
+	char	tempRto[MAX_JMS_NAME] = { 0 };
+	char	tempDst[MAX_JMS_NAME] = { 0 };
+	char	tempCid[MAX_JMS_NAME] = { 0 };
+	char	tempGid[MAX_JMS_NAME] = { 0 };
+	char	tempSeq[MAX_JMS_NAME] = { 0 };
+	char	tempExp[MAX_JMS_NAME] = { 0 };
+	char	tempPri[MAX_JMS_NAME] = { 0 };
+	char	tempDlv[MAX_JMS_NAME] = { 0 };
+	char	tempTms[MAX_JMS_NAME] = { 0 };
+	char	*tempUser;
+	size_t  tempUserLen = 16384;
 	char	traceInfo[512];		// work variable to build trace message
 
 	if (pDoc->traceEnabled)
@@ -529,16 +531,8 @@ void jms::parseRFH2jms(unsigned char *rfhdata, int dataLen)
 
 	// initialize fields
 	idx = 0;
-	memset(tempDst, 0, sizeof(tempDst));
-	memset(tempRto, 0, sizeof(tempRto));
-	memset(tempCid, 0, sizeof(tempCid));
-	memset(tempGid, 0, sizeof(tempGid));
-	memset(tempSeq, 0, sizeof(tempSeq));
-	memset(tempExp, 0, sizeof(tempExp));
-	memset(tempPri, 0, sizeof(tempPri));
-	memset(tempDlv, 0, sizeof(tempDlv));
-	memset(tempTms, 0, sizeof(tempTms));
-	memset(tempUser, 0, sizeof(tempUser));
+	tempUser = (char*)rfhMalloc(tempUserLen, "JMSTPUSR");
+	memset(tempUser, 0, tempUserLen);
 
 	// Search for the fields in the jms folder
 	ptr = (char *)rfhdata + 5;
@@ -639,6 +633,10 @@ void jms::parseRFH2jms(unsigned char *rfhdata, int dataLen)
 
 	// get the instance variables into the form data
 	UpdateData(FALSE);
+
+	if (tempUser) {
+		rfhFree(tempUser);
+	}
 
 	if (pDoc->traceEnabled)
 	{
@@ -772,8 +770,9 @@ int jms::buildJmsArea(int ccsid, int encoding)
 	int				j;
 	wchar_t			*ucsPtr;
 	unsigned char	*tempPtr;
-	char			tempfield[MAX_RFH_LENGTH + 4];
-	char			tempValue[MAX_RFH_LENGTH + 4];
+	char			*tempField;
+	char			*tempValue;
+	const size_t    bufLen = MAX_RFH_LENGTH + 4;
 	char			traceInfo[128];					// work variable to build trace message
 
 	if (pDoc->traceEnabled)
@@ -785,6 +784,11 @@ int jms::buildJmsArea(int ccsid, int encoding)
 		pDoc->logTraceEntry(traceInfo);
 	}
 
+	tempField = (char *)rfhMalloc(bufLen, "TMPFIELD");
+	tempValue = (char *)rfhMalloc(bufLen, "TMPVALUE");
+	memset(tempField, 0, bufLen);
+	memset(tempValue, 0, bufLen);
+
 	// Has the jms data been changed?
 	if (jmsDataChanged || (jms_data_ccsid != ccsid) || (jms_data_encoding != encoding))
 	{
@@ -795,99 +799,99 @@ int jms::buildJmsArea(int ccsid, int encoding)
 	if (NULL == rfh_jms_area)
 	{
 		// Add the first part of the XML headers
-		strcpy(tempfield, RFH2_JMS_B);
+		strcpy(tempField, RFH2_JMS_B);
 
 		if (m_jms_dst.GetLength() > 0)
 		{
-			strcat(tempfield, RFH2_JMS_DST_B);
+			strcat(tempField, RFH2_JMS_DST_B);
 			replaceChars(m_jms_dst, tempValue);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_DST_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_DST_E);
 		}
 
 		if (m_jms_rto.GetLength() > 0)
 		{
-			strcat(tempfield, RFH2_JMS_RTO_B);
+			strcat(tempField, RFH2_JMS_RTO_B);
 			replaceChars(m_jms_rto, tempValue);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_RTO_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_RTO_E);
 		}
 
 		if (m_jms_priority > 0)
 		{
-			strcat(tempfield, RFH2_JMS_PRI_B);
+			strcat(tempField, RFH2_JMS_PRI_B);
 			sprintf(tempValue, "%d", m_jms_priority);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_PRI_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_PRI_E);
 		}
 
 		if (m_jms_delivery_mode > 0)
 		{
-			strcat(tempfield, RFH2_JMS_DLV_B);
+			strcat(tempField, RFH2_JMS_DLV_B);
 			sprintf(tempValue, "%d", m_jms_delivery_mode);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_DLV_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_DLV_E);
 		}
 
 		if (m_jms_expiration.GetLength() > 0)
 		{
-			strcat(tempfield, RFH2_JMS_EXP_B);
+			strcat(tempField, RFH2_JMS_EXP_B);
 			replaceChars(m_jms_expiration, tempValue);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_EXP_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_EXP_E);
 		}
 
 		if (m_jms_correl_id.GetLength() > 0)
 		{
-			strcat(tempfield, RFH2_JMS_CID_B);
+			strcat(tempField, RFH2_JMS_CID_B);
 			replaceChars(m_jms_correl_id, tempValue);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_CID_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_CID_E);
 		}
 
 		if (m_jms_group_id.GetLength() > 0)
 		{
-			strcat(tempfield, RFH2_JMS_GID_B);
+			strcat(tempField, RFH2_JMS_GID_B);
 			replaceChars(m_jms_group_id, tempValue);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_GID_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_GID_E);
 		}
 
 		if (m_jms_sequence > 0)
 		{
-			strcat(tempfield, RFH2_JMS_SEQ_B);
+			strcat(tempField, RFH2_JMS_SEQ_B);
 			sprintf(tempValue, "%d", m_jms_sequence);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_SEQ_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_SEQ_E);
 		}
 
 		if (m_jms_timestamp.GetLength() > 0)
 		{
-			strcat(tempfield, RFH2_JMS_TMS_B);
+			strcat(tempField, RFH2_JMS_TMS_B);
 			replaceChars(m_jms_timestamp, tempValue);
-			strcat(tempfield, tempValue);
-			strcat(tempfield, RFH2_JMS_TMS_E);
+			strcat(tempField, tempValue);
+			strcat(tempField, RFH2_JMS_TMS_E);
 		}
 
 		if (m_jms_user_def.GetLength() > 0)
 		{
-			strcat(tempfield, m_jms_user_def);
+			strcat(tempField, m_jms_user_def);
 		}
 
 		// Add the last part of the XML headers
-		strcat(tempfield, RFH2_JMS_E);
+		strcat(tempField, RFH2_JMS_E);
 
 		// check if the data must be converted to UCS-2
 		if (isUCS2(ccsid))
 		{
 			// convert the data to UCS-2
 			// allocate a temporary area to hold the UCS-2 data
-			tempPtr = (unsigned char *)rfhMalloc(2 * strlen(tempfield) + 16, "TEMPPTRJ");
+			tempPtr = (unsigned char *)rfhMalloc(2 * strlen(tempField) + 16, "TEMPPTRJ");
 
 			if (tempPtr != 0)
 			{
 				// translate the data to UCS-2
-				MultiByteToUCS2(tempPtr, 2 * strlen(tempfield) + 2, (unsigned char *)tempfield, strlen(tempfield));
+				MultiByteToUCS2(tempPtr, 2 * strlen(tempField) + 2, (unsigned char *)tempField, strlen(tempField));
 
 				// set the length of the new jms in bytes (each 16-bit character is 2 bytes)
 				m_RFH_jms_len = roundLength2(tempPtr, NUMERIC_PC) * 2;
@@ -929,10 +933,10 @@ int jms::buildJmsArea(int ccsid, int encoding)
 		else
 		{
 			// Round it up to a multiple of 4 if necessary
-			m_RFH_jms_len = roundLength((unsigned char *)tempfield);
+			m_RFH_jms_len = roundLength((unsigned char *)tempField);
 
 			// save the results
-			setJmsArea((unsigned char *)tempfield, m_RFH_jms_len, ccsid, encoding);
+			setJmsArea((unsigned char *)tempField, m_RFH_jms_len, ccsid, encoding);
 		}
 	}
 
@@ -946,6 +950,13 @@ int jms::buildJmsArea(int ccsid, int encoding)
 
 		// write the data to the trace file
 		pDoc->dumpTraceData("jms data", (unsigned char *)rfh_jms_area, m_RFH_jms_len);
+	}
+
+	if (tempField) {
+		rfhFree(tempField);
+	}
+	if (tempValue) {
+		rfhFree(tempValue);
 	}
 
 	return m_RFH_jms_len;

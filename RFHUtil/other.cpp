@@ -49,6 +49,7 @@ other::other() : CPropertyPage(other::IDD)
 	otherCcsid = 0;
 	otherEncoding = 0;
 	otherDataChanged = false;
+	pDoc = NULL;
 }
 
 other::~other()
@@ -410,7 +411,7 @@ char * other::findEndOfLine(char *inPtr, char *endPtr)
 
 {
 	// look for a CR or LF or the end of the string
-	while ((inPtr < endPtr) && (inPtr[0] != 0) && (inPtr[0] != '\r') && (inPtr[0] != '\r'))
+	while ((inPtr < endPtr) && (inPtr[0] != 0) && (inPtr[0] != '\r') && (inPtr[0] != '\n'))
 	{
 		// move on to the next character
 		inPtr++;

@@ -217,6 +217,7 @@ void CIdEdit::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
 								int idx=0;
 								while ((idx < maxBytes) && (wBeg < wEnd))
 								{
+#pragma warning(suppress: 6386)
 									currentText[wBeg++] = clipBoardData[idx++];
 								}
 

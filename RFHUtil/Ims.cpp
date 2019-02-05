@@ -70,6 +70,7 @@ CIms::CIms() : CPropertyPage(CIms::IDD)
 	m_IIH_commit_mode = IMS_COMMIT_FIRST;
 	m_IIH_security_scope = IMS_SEC_CHECK;
 	m_IIH_trans_state = IMS_NO_CONV;
+	m_save_include_header = FALSE;
 }
 
 CIms::~CIms()
@@ -407,7 +408,7 @@ int CIms::parseIMSheader(unsigned char * imsData, int dataLen, int ccsid, int en
 
 {
 	int				dataType;
-	unsigned char	tempArea[64];
+	unsigned char	tempArea[64] = { 0 };
 	MQIIH			iih;
 	char			traceInfo[128];		// work variable to build trace message
 
@@ -874,7 +875,9 @@ int CIms::buildIMSheader(unsigned char * header, int ccsid, int encodeType)
 		createHeader(ccsid, encodeType);
 	}
 
-	memcpy(header, imsHeader, imsLength);
+	if (imsHeader != NULL) {
+		memcpy(header, imsHeader, imsLength);
+	}
 
 	// check if we are supposed to add an LLBB field after the header
 	if (m_IIH_add_length)

@@ -277,7 +277,7 @@ int64_t my_atoi64(const char * valueptr)
 	{
 		if ((valueptr[i] >= '0') && (valueptr[i] <= '9'))
 		{
-			result = (result * 10) + (valueptr[i] - '0');
+			result = (result * 10) + ((int64_t)valueptr[i] - '0');
 		}
 		else
 		{
@@ -1359,7 +1359,7 @@ void processBackspace(CWnd *wnd)
 			nStart = nEnd - 1;
 
 			// check if it is a CR or LF character
-			if ((value[nStart] != '\n') || (value[nStart] != '\n'))
+			if ((value[nStart] != '\n') && (value[nStart] != '\r'))
 			{
 				// delete the character
 				value.Delete(nStart, 1);
@@ -1370,7 +1370,7 @@ void processBackspace(CWnd *wnd)
 				value.Delete(nStart, 1);
 
 				// check for a second character in front of this one
-				if ((nStart > 0) && (((value[nStart-1] == '\n') || (value[nStart-1] == '\n'))))
+				if ((nStart > 0) && (((value[nStart-1] == '\n') || (value[nStart-1] == '\r'))))
 				{
 					// delete the CR or LF character
 					value.Delete(nStart-1, 1);
@@ -5753,13 +5753,14 @@ void * rfhMalloc(size_t length, const char * tag)
 	char *			ptr;
 	CRfhutilApp *	app;				// pointer to the application object
 	char			traceInfo[512];		// work variable to build trace message
+	char            tmpTag[9] = { 0 };
 
 	// find the application object
 	app = (CRfhutilApp *)AfxGetApp();
 
 	// allocate the memory plus an additional 16 bytes
 	ptr = (char *)malloc(length + 16);
-
+	
 	// did the malloc work?
 	if (NULL == ptr)
 	{
@@ -5789,9 +5790,13 @@ void * rfhMalloc(size_t length, const char * tag)
 		maxBytes = currBytes;
 	}
 
-	// set a tag at the front of the data
-	memset(ptr, 0, 16);
-	memcpy(ptr, tag, 8);
+	
+	// set a tag at the front of the data. Compiler/Analyser gives bogus warning so suppress it
+	memset(ptr, 0, 16 + length); // Fill buffer with 0
+	// Make sure tag has 8 bytes available */
+	memset(tmpTag, ' ', 8);
+	strncpy(tmpTag, tag, 8);
+	memcpy(ptr, tmpTag, 8);
 	memcpy(ptr + 8, &length, sizeof(size_t));
 
 	// check if trace is enabled

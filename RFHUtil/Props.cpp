@@ -43,6 +43,7 @@ CProps::CProps() : CPropertyPage(CProps::IDD)
 	
 	propertyCount = 0;				// initialize the number of user properties
 	xml = NULL;						// initialize XML object pointer
+	pDoc = NULL;
 }
 
 CProps::~CProps()
@@ -942,14 +943,14 @@ int CProps::checkLineAttrs(const char *start, const char *end)
 void CProps::checkForRetained(BOOL *isRetained)
 
 {
-	int		ofs;
-	int		ofs2;
-	int		ofs3;
-	int		ofs4;
-	int		ofs5;
-	int		ofs6;
-	int		ofs7;
-	int		ofs8;
+	int		ofs = 0;
+	int		ofs2 = 0;
+	int		ofs3 = 0;
+	int		ofs4 = 0;
+	int		ofs5 = 0;
+	int		ofs6 = 0;
+	int		ofs7 = 0;
+	int		ofs8 = 0;
 	char	traceInfo[640];		// work variable to build trace message
 
 	// Update the instance variables from the controls

@@ -63,10 +63,13 @@ CCapPubs::CCapPubs(CWnd* pParent /*=NULL*/)
 	m_incl_headers = TRUE;
 	m_incl_topic = TRUE;
 	m_incl_props = TRUE;
+	m_hAccel = NULL;
 
 	pDoc=NULL;
 	thread = NULL;
 	exitCode=STILL_ACTIVE;
+	parms = NULL;
+	helperMsg = 0;
 }
 
 

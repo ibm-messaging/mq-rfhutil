@@ -1001,7 +1001,7 @@ void replaceChars(const CString &value, char *valStr)
 char * extractAttribute(char *VarName, char *VarValue, char *Ptr)
 
 {
-	char	*tempValue;
+	char	*tempValue = NULL;
 	char	*tempVarName;
 	char	*tempVarValue;
 	char	quotechar;
@@ -1126,8 +1126,8 @@ void processAttributes(char *xmlVarName, char *varName, char *tempVarAttr, char 
 
 {
 	char	*tempPtr;
-	char	tempVarName[8192];
-	char	tempVarValue[8192];
+	char	*tempVarName = (char *)rfhMalloc(8192,"XMLSUBVN");
+	char	*tempVarValue = (char *)rfhMalloc(8192,"XMLSUBVV");
 	char	tempName[4];
 
 	// initialize a pointer to the beginning of the attribute list
@@ -1173,6 +1173,11 @@ void processAttributes(char *xmlVarName, char *varName, char *tempVarAttr, char 
 
 		tempPtr = extractAttribute(tempVarName, tempVarValue, tempPtr);
 	}
+
+	if (tempVarName)
+		rfhFree(tempVarName);
+	if (tempVarValue)
+		rfhFree(tempVarValue);
 }
 
 int setEscChar(unsigned char *bufferin, unsigned char *bufferout)

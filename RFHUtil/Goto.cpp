@@ -40,6 +40,7 @@ CGoto::CGoto(CWnd* pParent /*=NULL*/)
 		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 	maxOffset = 0;
+	offset = 0;
 }
 
 
@@ -152,6 +153,7 @@ CGoto::CGoto(CWnd *pParent, int maxOffset)
 		: CDialog(CGoto::IDD, pParent)
 {
 	this->maxOffset = maxOffset;
+	this->offset = 0;
 }
 
 int CGoto::getOffset()

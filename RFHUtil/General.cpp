@@ -83,6 +83,7 @@ General::General() : CPropertyPage(General::IDD)
 	m_mq_props = 0;
 	m_file_codepage = _T("");
 	m_close_options = Q_CLOSE_NONE;
+	m_allow_seg = FALSE;
 	//}}AFX_DATA_INIT
 	pDoc = NULL;
 

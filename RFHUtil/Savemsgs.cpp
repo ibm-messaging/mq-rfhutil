@@ -51,6 +51,8 @@ CSavemsgs::CSavemsgs(CWnd* pParent /*=NULL*/)
 	m_incl_headers = FALSE;
 	m_prop_delim = _T("");
 	m_append_file = FALSE;
+	m_hAccel = NULL;
+	memset(strTitle, 0, sizeof(strTitle));
 
 	//}}AFX_DATA_INIT
 

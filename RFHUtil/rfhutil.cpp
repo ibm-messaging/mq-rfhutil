@@ -1,5 +1,5 @@
 /*
-Copyright (c) IBM Corporation 2000, 2018
+Copyright (c) IBM Corporation 2000, 2019
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -909,7 +909,7 @@ void CRfhutilApp::getVersInfo()
 	char	blockName[256];
 	char	szModuleName[_MAX_PATH];
 	TCHAR	moduleName[_MAX_PATH];
-	DWORD	handle;
+	DWORD	handle = 0L;
 	DWORD	verLS;
 	DWORD	verMS;
 	VS_FIXEDFILEINFO	*vf;
@@ -1042,7 +1042,7 @@ int CRfhutilApp::ExitInstance()
 	// clean up for MFC
 	CoUninitialize();
 
-	return CWinApp::ExitInstance();
+	return 0;  
 }
 
 //////////////////////////////////////

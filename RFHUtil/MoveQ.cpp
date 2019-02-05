@@ -45,6 +45,8 @@ MoveQ::MoveQ(CWnd* pParent /*=NULL*/)
 	// initialize counts of the number of queue names added and skipped
 	added = 0;
 	skipped = 0;
+	pDoc = NULL;
+	m_hAccel = NULL;
 }
 
 
