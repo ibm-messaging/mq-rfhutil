@@ -10436,7 +10436,9 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 			cno.SecurityParmsPtr = &csp;
 
 			// set the CNO version level so the MQCSP pointer is used
-			cno.Version = MQCNO_VERSION_5;
+			if (cno.Version < MQCNO_VERSION_5) {
+				cno.Version = MQCNO_VERSION_5;
+			}
 		}
 		else
 		{
@@ -10468,8 +10470,8 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 
 		if (traceEnabled)
 		{
-			// create the trace line
-			sprintf(traceInfo, "DataArea::connect2QM() using m_conn_userid=%s m_conn_password=%s m_conn_use_csp=%d clientVersion=%d", (LPCTSTR)m_conn_userid, (LPCTSTR)m_conn_password, m_conn_use_csp, clientVersion);
+			// create the trace line - do not trace passwords. But indicate if one were set.
+			sprintf(traceInfo, "DataArea::connect2QM() using m_conn_userid=%s password set=%s m_conn_use_csp=%d clientVersion=%d", (LPCTSTR)m_conn_userid, (m_conn_password.GetLength() > 0) ? "Y":"N", m_conn_use_csp, clientVersion);
 
 			// log the data to the trace file
 			logTraceEntry(traceInfo);
@@ -10737,12 +10739,8 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 			// dump out the user id
 			dumpTraceData("Userid", (unsigned char *)((LPCTSTR)m_conn_userid), m_conn_userid.GetLength());
 
-			// check if there is a password
-			if (m_conn_password.GetLength() > 0)
-			{
-				// add the password to the trace
-				dumpTraceData("Pwd", (unsigned char *)((LPCTSTR)m_conn_password), m_conn_password.GetLength());
-			}
+			// Do not trace passwords
+			
 		}
 	}
 
@@ -10787,12 +10785,8 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 				// dump out the user id
 				dumpTraceData("Userid", (unsigned char *)((LPCTSTR)m_conn_userid), m_conn_userid.GetLength());
 
-				// check if there is a password
-				if (m_conn_password.GetLength() > 0)
-				{
-					// add the password to the trace
-					dumpTraceData("Pwd", (unsigned char *)((LPCTSTR)m_conn_password), m_conn_password.GetLength());
-				}
+				// Do not trace passwords
+				
 			}
 		}
 
