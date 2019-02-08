@@ -1237,8 +1237,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 9,1,1,228
- PRODUCTVERSION 9,1,1,228
+ FILEVERSION 9,1,2,228
+ PRODUCTVERSION 9,1,2,228
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1255,12 +1255,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "IBM Corporation"
             VALUE "FileDescription", "RFHUtil - IBM MQ and Integration Bus message test and display utility"
-            VALUE "FileVersion", "9.1.1.228"
-            VALUE "InternalName", "rfhutil V9.1.1"
+            VALUE "FileVersion", "9.1.2.228"
+            VALUE "InternalName", "rfhutil V9.1.2"
             VALUE "LegalCopyright", "Copyright (C) IBM Corporation 2000-2019"
             VALUE "OriginalFilename", "rfhutil.EXE"
             VALUE "ProductName", "IBM Integration Bus Test and Display Utility"
-            VALUE "ProductVersion", "9.1.1.228"
+            VALUE "ProductVersion", "9.1.2.228"
         END
     END
     BLOCK "VarFileInfo"
