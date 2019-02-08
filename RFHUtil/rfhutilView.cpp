@@ -807,10 +807,13 @@ BOOL CRfhutilView::GetToolTipText(UINT id, NMHDR *pTTTStruct, LRESULT *pResult)
 			strTipText.Format("Control ID = %d", nID);
 //			lstrcpyn(pTTT->szText, strTipText, sizeof(pTTT->szText));
 
-			if (pTTTStruct->code == TTN_NEEDTEXTA)
+			if (pTTTStruct->code == TTN_NEEDTEXTA) {
 				(void)lstrcpyn(pTTTA->szText, strTipText, sizeof(pTTTA->szText));
-			else
-				_mbstowcsz(pTTTW->szText, strTipText, sizeof(pTTTW->szText));
+			} 
+			else {
+				// Convert based on number of multibyte chars, not the size (bytes) of the buffer
+				_mbstowcsz(pTTTW->szText, strTipText, sizeof(pTTTW->szText) / sizeof(pTTTW->szText[0]));
+			}
 			pResult = 0;
 //			pTTT->lpszText = MAKEINTRESOURCE(nID);
 //			pTTT->hinst = AfxGetResourceHandle();

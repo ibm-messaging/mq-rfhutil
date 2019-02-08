@@ -909,7 +909,7 @@ void CRfhutilApp::getVersInfo()
 	char	blockName[256];
 	char	szModuleName[_MAX_PATH];
 	TCHAR	moduleName[_MAX_PATH];
-	DWORD	handle = 0L;
+	DWORD   handle;
 	DWORD	verLS;
 	DWORD	verMS;
 	VS_FIXEDFILEINFO	*vf;
@@ -924,7 +924,7 @@ void CRfhutilApp::getVersInfo()
 			if (size > 0)
 			{
 				m_versInfo = (char *)rfhMalloc(size, "VERSINFO");
-
+				handle = 0; // a reserved field in the next API call
 				if (GetFileVersionInfo(szModuleName, handle, size, m_versInfo))
 				{
 					versionDone = true;

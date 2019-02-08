@@ -10563,8 +10563,10 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 			cno.SSLConfigPtr = &sco;
 
 			// must use version 7 or later for SSL
-			cd.Version = MQCD_VERSION_7;
-			cd.StrucLength = MQCD_LENGTH_7;
+			if (cd.Version < MQCD_VERSION_7) {
+				cd.Version = MQCD_VERSION_7;
+				cd.StrucLength = MQCD_LENGTH_7;
+			}
 
 			// use version 4 so that the SSL information is picked up
 			if (cno.Version < MQCNO_VERSION_4) {
