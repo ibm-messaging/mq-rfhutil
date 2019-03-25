@@ -896,3 +896,6 @@
 * Build 228(V9.1.1 build 228) Feb 4 2019
   * Remove most of the warnings from VS 2017 code analysis 
   * Fix issue #2 - Passwords not sent when using TLS
+
+* Build 229 (V9.1.2 build 229) Mar 25 2019
+  * Fix issue #3 - XML parsing when usr folder attribute includes value with '/'

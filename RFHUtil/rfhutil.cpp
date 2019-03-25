@@ -26,6 +26,8 @@ Jim MacNair - Initial Contribution
 
 #include <locale.h>
 
+void EnablePrintfInMFC();
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -595,7 +597,17 @@ BOOL CRfhutilApp::InitInstance()
 		pDocument.getDefaultQM();
 	}
 
+	EnablePrintfInMFC();
 	return TRUE;
+}
+
+// Reopen the console so we can get debug output printed direct to it when needed.
+void EnablePrintfInMFC() {
+	if (getenv(RFHUTIL_VERBOSE_TRACE) != NULL && AttachConsole(ATTACH_PARENT_PROCESS))
+	{
+		FILE* pCout;
+		freopen_s(&pCout, "CONOUT$", "w", stdout);
+	}
 }
 
 BOOL CALLBACK countMonitorsCallback(HMONITOR hMon, HDC hdc, LPRECT rect, LPARAM parms)

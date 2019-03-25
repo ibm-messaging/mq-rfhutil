@@ -108,6 +108,23 @@ int CXMLParse::parse(const char * xmlIn, int length)
 			// count the number of begin brackets
 			numBrackets++;
 		}
+		else if ('"' == ptr[idx])
+		{
+			app->logTraceEntry("About to skip over some quoted field");
+			idx++;
+
+			while ((idx < length) && (ptr[idx] != '"'))
+			{
+				// skip the next character
+				idx++;
+			}
+
+			if ((idx < length) && ('"' == ptr[idx]))
+			{
+				// skip the trailing quotation mark
+				idx++;
+			}
+		}
 		else if ('=' == ptr[idx])
 		{
 			// count the number of equal signs
@@ -228,6 +245,15 @@ const char * CXMLParse::processDTD(const char *ptr, const char *endPtr)
 const char * CXMLParse::processQuote(const char *ptr, const char *endPtr, char quote)
 
 {
+	CRfhutilApp *	app;				// pointer to application object to locate trace routines
+	char			traceInfo[512];		// work area for trace line
+
+	// get a pointer to the application object
+	app = (CRfhutilApp *)AfxGetApp();
+
+	sprintf(traceInfo, "Inside processQuote starting with %*.s\n", endPtr - ptr, ptr);
+	app->logTraceEntry(traceInfo);
+
 	// skip the beginning quote mark
 	ptr++;
 
@@ -309,7 +335,6 @@ int CXMLParse::parseXML(const char *xmlIn, int length)
 	{
 		// create the trace line
 		sprintf(traceInfo, "Entering CXMLParse()::parseXML length=%d", length);
-
 		// trace entry to CXMLParse()::parseXML
 		app->logTraceEntry(traceInfo);
 	}
@@ -414,13 +439,23 @@ int CXMLParse::parseXML(const char *xmlIn, int length)
 			ptr++;
 		}
 
-		// find the end of the name pointer
-		while ((ptr < endPtr) && (ptr[0] != '/') && (ptr[0] != '>'))
+		// find the end of the name pointer. One wrinkle in XML that is not catered for here
+		// is if the value inside quotes contains the "other" quote. So we could have
+		//   <Name val="firstname 'nickname' surname"></Name> or
+		//   <Name val='firstname "nickname" surname'></Name> 
+		BOOL inQuote = false;
+		while (ptr < endPtr)
 		{
+			if (ptr[0] == '"' || ptr[0] == '\'') {
+				inQuote = !inQuote;
+			}
+
+			if (!inQuote && (ptr[0] == '/' || ptr[0] == '>'))
+				break;
 			ptr++;
 			endName++;
-		}
 
+		}
 		// check for an end tag
 		if ('/' == name[0])
 		{
