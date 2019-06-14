@@ -899,3 +899,6 @@
 
 * Build 229 (V9.1.2 build 229) Mar 25 2019
   * Fix issue #3 - XML parsing when usr folder attribute includes value with '/'
+
+* Build 230 (V9.1.3 build 230) June 11 2019
+  * Update what is stored in registry

@@ -79,7 +79,7 @@ static char THIS_FILE[] = __FILE__;
 #define RFHUTIL_MOST_RECENT_SSL_VALIDATE	"SSLValidate"
 #define RFHUTIL_MOST_RECENT_SSL_RESET_COUNT	"SSLResetCount"
 #define RFHUTIL_MOST_RECENT_CONN_USER		"connUser"
-#define RFHUTIL_MOST_RECENT_CONN_PW			"connPW"
+#define RFHUTIL_MOST_RECENT_CONN_PW			"connPW" // This field will in future be stored with no real content. So it overwrites any previous plaintext password.
 #define RFHUTIL_MOST_RECENT_CONN_SEC_EXIT	"SecurityExit"
 #define RFHUTIL_MOST_RECENT_CONN_SEC_DATA	"SecurityData"
 #define RFHUTIL_MOST_RECENT_CONN_LOC_ADDR	"LocalAddress"
@@ -1477,7 +1477,7 @@ void CRfhutilApp::SaveLastUsedQNames()
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_QUEUE, (LPCTSTR)initQname);
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_REMOTE, (LPCTSTR)initRemoteQMname);
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_USER, (LPCTSTR)initConnUser);
-	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_PW, (LPCTSTR)initConnPW);
+	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_PW, (LPCTSTR)""); // Storing this will overwrite any previously-stored password.
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_FILE_PATH, (LPCTSTR)initFilePath);
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_SEC_EXIT, (LPCTSTR)initSecExit);
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_SEC_DATA, (LPCTSTR)initSecData);
@@ -1526,9 +1526,9 @@ void CRfhutilApp::GetLastUsedQNames()
 		initRemoteQMname = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_REMOTE, NULL);
 	}
 
-	// get the connection user id and password
+	// get the connection user id but not the password which is no longer saved
 	initConnUser = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_USER, NULL);
-	initConnPW = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_PW, NULL);
+	/*initConnPW = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_PW, NULL);*/
 
 	// get the most recently used file path
 	initFilePath = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_FILE_PATH, NULL);
