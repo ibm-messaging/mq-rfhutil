@@ -44,7 +44,7 @@ CConnUser::CConnUser(CWnd* pParent /*=NULL*/)
 	m_security_exit = _T("");
 	m_security_data = _T("");
 	m_local_address = _T("");
-	m_conn_use_csp = FALSE;
+	m_conn_use_csp = TRUE;
 	m_hAccel = NULL;
 	//}}AFX_DATA_INIT
 }
@@ -71,7 +71,6 @@ void CConnUser::DoDataExchange(CDataExchange* pDX)
 	DDV_MaxChars(pDX, m_security_data, 32);
 	DDX_Text(pDX, IDC_CONN_LOCAL_ADDRESS, m_local_address);
 	DDV_MaxChars(pDX, m_local_address, 48);
-	DDX_Check(pDX, IDC_USE_CSP, m_conn_use_csp);
 	//}}AFX_DATA_MAP
 }
 
@@ -137,7 +136,7 @@ void CConnUser::OnConnReset()
 	m_conn_password.Empty();
 	m_ssl_cipher.Empty();
 	m_ssl_validate_client = FALSE;
-	m_conn_use_csp = FALSE;
+	m_conn_use_csp = TRUE;
 	m_use_ssl = FALSE;
 	m_ssl_reset_count = _T("0");
 	m_security_exit.Empty();
@@ -230,6 +229,9 @@ void CConnUser::OnDropdownConnSslCipher()
 	// insert items into the drop down list
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, " ");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS12");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS12_OR_HIGHER");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS13");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS13_OR_HIGHER");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_AES_128_CBC_SHA256");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_AES_256_CBC_SHA256");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_NULL_SHA256 ");

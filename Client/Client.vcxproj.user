@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <RESOURCE_FILE>\Users\macnair\Documents\vstudio2010\RFHUtil\RFHUtil\rfhutil.rc</RESOURCE_FILE>
+    <RESOURCE_FILE>\Users\MARKTaylor\Documents\GitHub\ibm-messaging\mq-rfhutil\RFHUtil\rfhutil.rc</RESOURCE_FILE>
   </PropertyGroup>
 </Project>

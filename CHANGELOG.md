@@ -894,7 +894,7 @@
   * Prevent duplicate QM entries in drop down list
 
 * Build 228(V9.1.1 build 228) Feb 4 2019
-  * Remove most of the warnings from VS 2017 code analysis 
+  * Remove most of the warnings from VS 2017 code analysis
   * Fix issue #2 - Passwords not sent when using TLS
 
 * Build 229 (V9.1.2 build 229) Mar 25 2019
@@ -902,3 +902,6 @@
 
 * Build 230 (V9.1.3 build 230) June 11 2019
   * Update what is stored in registry
+
+* Build 231 (V9.1.4 build 231) Apr 9 2021
+  * Enable TLS13 cipherspecs
