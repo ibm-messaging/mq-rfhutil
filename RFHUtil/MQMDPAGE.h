@@ -117,7 +117,7 @@ public:
 	CString	m_mqmd_priority;
 	BOOL	m_mqmd_group_last;
 	BOOL	m_mqmd_group_yes;
-	BOOL	m_segment_allowed;
+	BOOL	m_mqmd_segment_allowed;
 	BOOL	m_report_nan;
 	BOOL	m_report_pan;
 	BOOL	m_report_activity;

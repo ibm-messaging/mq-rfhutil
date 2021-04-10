@@ -84,7 +84,7 @@ MQMDPAGE::MQMDPAGE() : CPropertyPage(MQMDPAGE::IDD)
 	m_mqmd_priority = _T("");
 	m_mqmd_group_last = FALSE;
 	m_mqmd_group_yes = FALSE;
-	m_segment_allowed = FALSE;
+	m_mqmd_segment_allowed = FALSE;
 	m_report_nan = FALSE;
 	m_report_pan = FALSE;
 	m_report_activity = FALSE;
@@ -170,7 +170,7 @@ void MQMDPAGE::DoDataExchange(CDataExchange* pDX)
 	DDV_MaxChars(pDX, m_mqmd_priority, 8);
 	DDX_Check(pDX, IDC_GROUP_LAST, m_mqmd_group_last);
 	DDX_Check(pDX, IDC_GROUP_YES, m_mqmd_group_yes);
-	DDX_Check(pDX, IDC_SEGMENT_ALLOWED, m_segment_allowed);
+	DDX_Check(pDX, IDC_SEGMENT_ALLOWED, m_mqmd_segment_allowed);
 	DDX_Check(pDX, IDC_REPORT_NAN, m_report_nan);
 	DDX_Check(pDX, IDC_REPORT_PAN, m_report_pan);
 	DDX_Check(pDX, IDC_REPORT_ACTIVITY, m_report_activity);
@@ -1437,7 +1437,7 @@ void MQMDPAGE::processFlags(int flags)
 	m_mqmd_group_last = (flags & MQMF_LAST_MSG_IN_GROUP) > 0;
 	m_mqmd_segment_yes = (flags & MQMF_SEGMENT) > 0;
 	m_mqmd_segment_last = (flags & MQMF_LAST_SEGMENT) > 0;
-	m_mqmd_segment_yes = (flags & MQMF_SEGMENTATION_ALLOWED) > 0;
+	m_mqmd_segment_allowed = (flags & MQMF_SEGMENTATION_ALLOWED) > 0;
 }
 
 void MQMDPAGE::processMessageMQMD(MQMD2 * mqmd)
@@ -1673,7 +1673,7 @@ void MQMDPAGE::clearMQMD()
 	m_mqmd_group_last = FALSE;
 	m_mqmd_segment_yes = FALSE;
 	m_mqmd_segment_last = FALSE;
-	m_segment_allowed = FALSE;
+	m_mqmd_segment_allowed = FALSE;
 
 	// reset the display encoding
 	pDoc->m_numeric_format = NUMERIC_PC;
@@ -2301,7 +2301,7 @@ int MQMDPAGE::buildFlags()
 	}
 
 	// check if segmentation is allowed
-	if (m_segment_allowed)
+	if (m_mqmd_segment_allowed)
 	{
 		flags |= MQMF_SEGMENTATION_ALLOWED;
 	}
