@@ -905,3 +905,4 @@
 
 * Build 231 (V9.1.4 build 231) Apr 9 2021
   * Enable TLS13 cipherspecs
+  * Fix MQMD MsgFlags display (#12) 
