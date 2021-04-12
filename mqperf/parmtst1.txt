@@ -1,0 +1,159 @@
+[header]
+* Input parameters for MQPut2 program *
+*
+*
+* name of the queue and queue manager
+* to write messages to
+*
+qname=TEMP.OUT
+qmgr=MQSI
+*
+* total number of messages to be written
+* the program will stop after this number of
+* messages has been written
+*
+msgcount=3
+*
+* desired qdepth for input queue
+* the program will write messages until the queue depth
+* is equal to the qmax parameter.  When the queue depth 
+* reaches the desired depth, more messages will be written
+* to bring the depth back to twice the desired value.
+*
+qdepth=3
+qmax=15
+*
+* number of milliseconds to delay before checking
+* queue depth
+*
+sleeptime=20
+*
+* whether to dynamically adjust the sleeptime or not and whether
+* to write a line of output each time messages are written to the queue
+*
+* tune=0	do not dynamically adjust sleeptime
+* tune=1	adjust sleeptime dynamically
+*
+tune=0
+*
+* maximum number of messages to write in a single unit of work
+*
+batchsize=2
+*
+* MQMD format field
+*
+format= "MQSTR   "
+*
+* Correlation id specified in ASCII
+*
+*correlid="Performance Utility Test  "
+* 
+* Correlation id specified in Hex
+*
+*correlidx=20313233343536000037381a1b1c00
+*
+* Message priority
+*
+priority=2
+*
+* group id specified in ASCII
+*
+*groupid=group 1  
+*
+* group id specified in hex
+*
+*groupidx=c1c2f1f2
+*
+* reply to Queue manager
+*
+replyqm=TEST
+*
+* reply to queue name
+*
+replyq=TEST.REMOTE
+*
+* message persistence
+* persist no = 0
+* persist yes = 1
+* persist as queue def = 2
+*
+persist=0
+*
+* message type
+*
+* Allowed values for message type
+*  1 - request
+*  2 - reply
+*  4 - report
+*  8 - datagram
+*  112 - MQE fields from MQE
+*  113 - MQE fields
+*  65536 to 999,999,999 - user
+msgtype=1
+*
+* encoding for user data 
+* encoding=273 for AIX integers, etc
+* encoding=546 for PC integers, etc
+* encoding=785 for host 390 integers, etc
+*
+encoding=546
+*
+* code page for user data
+* codepage=437 for US PC characters (ASCII)
+* codepage=500 for US host characters (EBCDIC)
+*
+codepage=437
+*
+* the character sequence that separates messages in a file 
+*  message delimiter parameters in ascii or hex
+* only one or the other should be specified
+*
+* delimiter="#$%^&"
+* delimiterx="0D0A"
+*
+* rfh usage
+* rfh = N for No rfh
+* rfh = A for Automatic (look for RFH at beginning of data file)
+* rfh = 1 or V1 for Version 1 rfh from parameters in parm file
+* rfh = 2 or V2 for Version 2 rfh from parameters in parm file
+* rfh = X for special V2 rfh with fixed portion only and format=xml
+*
+* only first character checked, except for V when second character is also checked
+*
+rfh=N
+*
+* rfh data parameters - only used if rfh=1 or rfh=2
+*  ignored if rfh=N, rfh=A or rfh=X
+*
+* both V1 and V2
+*  encoding should be 546 for PC and 785 for host 390
+RFH_CCSID=500
+RFH_ENCODING=785
+* V2 only
+RFH_NAME_CCSID=1208
+RFH_DOMAIN=MRM
+RFH_MSG_SET=DH4M6DO072001	
+RFH_MSG_TYPE=Customer_Root
+RFH_MSG_FMT=CWF
+* V1 only
+RFH_APP_GROUP=Customer_Msgs
+RFH_FORMAT=Customer_Root
+*
+*
+* END OF PARAMETERS SECTION
+*
+* beginning of list of message data files
+* each line must contain a fully qualified file name
+* each file will provide the data for a separate message
+* the messages will be written in the order given below
+* only file names may follow the [filelist] entry
+*
+[filelist]
+msg1.dat
+msg2.dat
+
+[header]
+rfh=auto
+
+[filelist]
+c:\v2test\rfhtest\msg3.dat

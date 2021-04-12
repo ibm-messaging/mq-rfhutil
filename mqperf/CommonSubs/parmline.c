@@ -91,6 +91,7 @@ Jim MacNair - Initial Contribution
 #define DRAINQ				"DRAINQ"
 /* fields used by MQReply program */
 #define MAXREPLYTIME		"MAXREPLYTIME"
+#define MAXWAITTIME		"MAXWAITTIME" /* This is a synonym for maxreplytime */
 #define NANREPLYFILE		"NANREPLYFILE"
 #define PANREPLYFILE		"PANREPLYFILE"
 #define REPLYFILENAME		"REPLYFILENAME"
@@ -780,7 +781,8 @@ int evaluateParm(char * ptr, char * value, PUTPARMS *parms)
 	foundit = checkIntParm(ptr, TUNE, &(parms->tune), valueptr, NULL, foundit);
 	foundit = checkIntParm(ptr, REPORT, &(parms->report), valueptr, NULL, foundit);
 	foundit = checkIntParm(ptr, MAXTIME, &(parms->maxtime), valueptr, NULL, foundit);
-	foundit = checkIntParm(ptr, MAXREPLYTIME, &(parms->maxWaitTime), valueptr, NULL, foundit);
+	foundit = checkIntParm(ptr, MAXREPLYTIME, &(parms->maxWaitTime), valueptr, NULL, foundit); /* maxReplyTime has been the traditional config value */
+	foundit = checkIntParm(ptr, MAXWAITTIME, &(parms->maxWaitTime), valueptr, NULL, foundit);  /* but maxWaitTime is more meaningful and is the internal field, so make both possible */ 
 	foundit = checkIntParm(ptr, WAITTIME, &(parms->waitTime), valueptr, NULL, foundit);
 	foundit = checkCharParm(ptr, REPLYQM, (parms->replyQM), valueptr, NULL, foundit, MQ_Q_MGR_NAME_LENGTH);
 	foundit = checkCharParm(ptr, REPLYQ, (parms->replyQ), valueptr, NULL, foundit, MQ_Q_NAME_LENGTH);

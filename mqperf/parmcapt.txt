@@ -1,0 +1,45 @@
+*
+* name of the queue and queue manager
+* to read messages from
+*
+qname=TEMP.OUT
+qmgr=MQSI
+*
+* maximum number of messages to be read
+* from the input queue.  The program
+* will stop when the queue is drained
+* or this number of messages have been read
+*
+msgcount=4
+*
+* delimiter and delimiterx are used to
+* define the message seperator sequence.
+*
+delimiter="#@%@#"
+*delimiterx="0D0A"
+*
+* striprfh parameter determines if RFH
+* headers are to be written to the 
+* data file along with the message
+* data or removed from the message
+*
+striprfh=Y
+*
+* IndivFiles parameter determines if each
+* message is put in a separate file.  If
+* this parameter is used then the delimiter
+* is ignored.
+*
+indivfiles=N
+*
+* readonly parameter determines if messages 
+* are read or browsed.  If it is set to Y
+* then messages will remain on the queue
+* after they are captured
+*
+readonly=N
+*
+* saveMQMD parameter determines if the MQMD
+* is saved along with the data from a message
+*
+saveMQMD=N

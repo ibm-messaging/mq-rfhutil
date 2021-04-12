@@ -13,6 +13,8 @@ bin/Debug
 mqperf/*/Release
 mqperf/Release
 
+bin/linux
+
 # More files created during the build by Visual Studio
 *.iobj
 *.ipdb

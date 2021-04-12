@@ -31,7 +31,7 @@ OUTDIR=../bin/linux
 
 APPS = $(foreach dir, $(DIR), $(OUTDIR)/$(dir))
 
-CFLAGS=-I/opt/mqm/inc -L/opt/mqm/lib64 -lmqm -I./CommonSubs
+CFLAGS=-I/opt/mqm/inc -L/opt/mqm/lib64 -lmqm -I./CommonSubs 
 WARNINGS=-Wno-implicit-function-declaration
 
 # mqputs is the same as mqput2 but with an extra -D option.
@@ -41,16 +41,16 @@ WARNINGS=-Wno-implicit-function-declaration
 all: $(OUTDIR) $(DIR) mqputs mqtimes
 
 $(OUTDIR): clean
-			mkdir -p $(OUTDIR)
+	mkdir -p $(OUTDIR)
 
 $(DIR): $(OUTDIR)
-		$(CC) -o $(OUTDIR)/$@ $@/$@.c ./CommonSubs/*.c $(CFLAGS) $(WARNINGS)
+	$(CC) -o $(OUTDIR)/$@ $@/$@.c ./CommonSubs/*.c $(CFLAGS) $(WARNINGS)
 
 mqputs: $(OUTDIR)
-		$(CC) -o $(OUTDIR)/$@ mqput2/mqput2.c ./CommonSubs/*.c $(CFLAGS) $(WARNINGS) -DNOTUNE
+	$(CC) -o $(OUTDIR)/$@ mqput2/mqput2.c ./CommonSubs/*.c $(CFLAGS) $(WARNINGS) -DNOTUNE
 
 mqtimes: $(OUTDIR)
-				$(CC) -o $(OUTDIR)/$@ mqtimes/mqtimes.c $(CFLAGS) $(WARNINGS)
+	$(CC) -o $(OUTDIR)/$@ mqtimes/mqtimes.c $(CFLAGS) $(WARNINGS)
 
 clean:
-		rm -f $(OUTDIR)/*
+	rm -f $(OUTDIR)/*

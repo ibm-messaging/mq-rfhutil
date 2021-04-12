@@ -1,0 +1,9 @@
+[header]
+* Input parameters for MQReply program *
+*
+*
+* name of the queue and queue manager
+* to read messages from
+*
+qname=LATENCY
+qmgr=IB9QMGR
