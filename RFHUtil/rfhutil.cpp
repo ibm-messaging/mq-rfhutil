@@ -2276,8 +2276,12 @@ void CRfhutilApp::startTrace()
 	if (traceFileName != NULL)
 	{
 		// try to open the trace file
-		traceFile = fopen(traceFileName, "a");
-
+		if (!strcmp(traceFileName, "stdout")) {
+			traceFile = stdout;
+		}
+		else {
+			traceFile = fopen(traceFileName, "a");
+		}
 		// check if the open worked
 		if (traceFile != NULL)
 		{

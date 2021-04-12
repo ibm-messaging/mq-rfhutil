@@ -905,4 +905,8 @@
 
 * Build 231 (V9.1.4 build 231) Apr 9 2021
   * Enable TLS13 cipherspecs
-  * Fix MQMD MsgFlags display (#12) 
+  * Fix MQMD MsgFlags display (#12)
+
+* Build 232 (V9.1.5 build 232) Apr 12 2021
+  * Fix MQDLH PutDate copying (#11)
+  * If RFHUTIL_TRACE_FILE set to "stdout" then just print debug direct to console

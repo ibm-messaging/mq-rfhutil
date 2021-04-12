@@ -389,17 +389,22 @@ int CDlq::createHeader(int ccsid, int encodeType)
 		{
 			len = sizeof(tempDate) - 1;
 		}
+		
 
 		// get a copy of the date
 		memset(tempDate, 0, sizeof(tempDate));
 		memcpy(tempDate, (LPCTSTR)m_dlq_date_time, len);
 
-		// move the date to the PutDate field - removing the slashes
+		pDoc->dumpTraceData("DLQ DateTime", (const unsigned char *)tempDate, len);
+
+		// If copied from the MQMD, the displayed put date/time should look like
+		//  tempDate = "2020/12/31 01:02:03.44"
+		// Move the date to the PutDate field - removing the slashes
 		ptr = tempDt;
 		memcpy(ptr, tempDate, 4);			// copy the year
 		memcpy(ptr + 4, tempDate + 5, 2);	// copy the month, skipping the slash
-		memcpy(ptr + 6, tempDate + 8, 2);	// copy the month, skipping the slash
-		memcpy(tempDLQ.PutDate, tempDate, sizeof(tempDLQ.PutDate));
+		memcpy(ptr + 6, tempDate + 8, 2);	// copy the day, skipping the slash
+		memcpy(tempDLQ.PutDate, tempDt, sizeof(tempDLQ.PutDate));
 
 		// move the time to the PutTime field - removing the colons
 		ptr = tempTm;
