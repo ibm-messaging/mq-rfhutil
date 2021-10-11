@@ -189,7 +189,6 @@ public:
 	char productType[16];
 	char VRMF[32];
 	BOOL isRecentFileMenuEnabled();
-	BOOL initUseCSP;
 	BOOL verboseTrace;
 	BOOL fontTrace;
 	BOOL	initUseSSL;

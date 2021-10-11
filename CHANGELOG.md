@@ -1,6 +1,10 @@
 # Changelog
 Newest updates are at the top of this file
 
+## Build 233 (V9.1.6 build 233) Oct 11 2021
+* Remove references to "Use CSP" in doc as now used always     
+* Update TLS ciphers for currency - only list supported TLS 1.2 and 1.3
+
 ## Build 232 (V9.1.5 build 232) Apr 12 2021
 * Fix MQDLH PutDate copying (#11)
 * If RFHUTIL_TRACE_FILE set to "stdout" then just print debug direct to console

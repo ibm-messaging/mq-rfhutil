@@ -44,7 +44,6 @@ CConnUser::CConnUser(CWnd* pParent /*=NULL*/)
 	m_security_exit = _T("");
 	m_security_data = _T("");
 	m_local_address = _T("");
-	m_conn_use_csp = TRUE;
 	m_hAccel = NULL;
 	//}}AFX_DATA_INIT
 }
@@ -136,7 +135,6 @@ void CConnUser::OnConnReset()
 	m_conn_password.Empty();
 	m_ssl_cipher.Empty();
 	m_ssl_validate_client = FALSE;
-	m_conn_use_csp = TRUE;
 	m_use_ssl = FALSE;
 	m_ssl_reset_count = _T("0");
 	m_security_exit.Empty();
@@ -219,28 +217,42 @@ void CConnUser::dlgItemAddString(const int dlgItem, const char *itemText)
 #endif
 }
 
+
+//See https://www.ibm.com/docs/en/ibm-mq/9.2?topic=messages-enabling-cipherspecs for currently supported ciphers
 void CConnUser::OnDropdownConnSslCipher() 
 {
 	// load the MQ SSL cipher options into the combo box
-	// Only the TLS 1.2 ciphers are now included here as SSL3 and TLS1.0 are deprecated.
+
+	// Only the TLS 1.2 and TLS 1.3 ciphers are now included here as SSL3 and TLS1.0 are deprecated.
 	// From MQ V9.1.1 you can use "ANY_TLS12" to select any valid ciphersuite from that protocol.
+	// MQ V9.2 extended for TLS13
 	((CComboBox *)GetDlgItem(IDC_CONN_SSL_CIPHER))->ResetContent();
 
-	// insert items into the drop down list
+	// insert items into the drop down list - they go in the order listed here, not alphabetic
+
+	// Empty string to select no TLS
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, " ");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS12");
+
+	// Negotiated
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS12_OR_HIGHER");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS13");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS12");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS13_OR_HIGHER");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY_TLS13");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ANY");
+
+	// TLS 1.3
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_AES_256_GCM_SHA384");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_AES_128_GCM_SHA256");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_AES_128_CCM_SHA256");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_AES_128_CCM_8_SHA256");
+	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_CHACHA20_POLY1305_SHA256");
+
+	// TLS 1.2
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_AES_128_CBC_SHA256");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_AES_256_CBC_SHA256");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_NULL_SHA256 ");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_AES_128_GCM_SHA256");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_AES_256_GCM_SHA384");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_ECDSA_RC4_128_SHA256");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_ECDSA_3DES_EDE_CBC_SHA256");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_RSA_RC4_128_SHA256");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_RSA_3DES_EDE_CBC_SHA256");
+
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_ECDSA_AES_128_CBC_SHA256");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_ECDSA_AES_256_CBC_SHA384");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_RSA_AES_128_CBC_SHA256");
@@ -249,10 +261,7 @@ void CConnUser::OnDropdownConnSslCipher()
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_ECDSA_AES_256_GCM_SHA384");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_RSA_AES_128_GCM_SHA256");
 	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_RSA_AES_256_GCM_SHA384");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_RSA_NULL_SHA256");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "ECDHE_ECDSA_NULL_SHA256");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_NULL_NULL");
-	dlgItemAddString(IDC_CONN_SSL_CIPHER, "TLS_RSA_WITH_RC4_128_SHA256");
+	
 }
 
 

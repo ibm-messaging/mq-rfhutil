@@ -455,7 +455,6 @@ public:
 	BOOL m_read_ignore_MQMD;
 	BOOL verboseTrace;
 	BOOL fontTrace;
-	BOOL m_conn_use_csp;
 	int m_report_coa;					// report options - Confirm on Arrival
 	int m_report_cod;					// report options - Confirm on Arrival
 	int m_report_except;				// report options - Exception when message processed

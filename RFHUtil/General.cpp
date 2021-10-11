@@ -1197,8 +1197,6 @@ BOOL General::OnInitDialog()
 	pDoc->m_conn_password = ((CRfhutilApp *)AfxGetApp())->initConnPW;
 
 #ifdef MQCLIENT
-	// remember the previous setting for using a CSP for user id and password
-	pDoc->m_conn_use_csp = ((CRfhutilApp *)AfxGetApp())->initUseCSP;
 
 	// get the SSL values that were saved in the registry
 	pDoc->m_use_ssl = ((CRfhutilApp *)AfxGetApp())->initUseSSL;
@@ -2214,7 +2212,7 @@ void General::OnSetConnUser()
 	if (pDoc->traceEnabled)
 	{
 		// create the trace line
-		sprintf(traceInfo, " General::OnSetConnUser() pDoc->m_conn_use_csp=%d pDoc->m_conn_userid=%s", pDoc->m_conn_use_csp, (LPCTSTR)pDoc->m_conn_userid);
+		sprintf(traceInfo, " General::OnSetConnUser() pDoc->m_conn_userid=%s", (LPCTSTR)pDoc->m_conn_userid);
 
 		// trace entry to OnSetConnUser
 		pDoc->logTraceEntry(traceInfo);
@@ -2224,7 +2222,6 @@ void General::OnSetConnUser()
 	dlg.m_conn_userid = (LPCTSTR)pDoc->m_conn_userid;
 	dlg.m_conn_password = (LPCTSTR)pDoc->m_conn_password;
 	dlg.m_use_ssl = pDoc->m_use_ssl;
-	dlg.m_conn_use_csp = pDoc->m_conn_use_csp;
 	dlg.m_ssl_validate_client = pDoc->m_ssl_validate;
 	dlg.m_ssl_cipher = (LPCTSTR)pDoc->m_ssl_cipher;
 	dlg.m_ssl_keyr = (LPCTSTR)pDoc->m_ssl_keyr;
@@ -2244,7 +2241,6 @@ void General::OnSetConnUser()
 		pDoc->m_conn_password = (LPCTSTR)dlg.m_conn_password;
 		pDoc->m_ssl_cipher = (LPCTSTR)dlg.m_ssl_cipher;
 		pDoc->m_ssl_validate = dlg.m_ssl_validate_client;
-		pDoc->m_conn_use_csp = dlg.m_conn_use_csp;
 		pDoc->m_use_ssl = dlg.m_use_ssl;
 		pDoc->m_ssl_keyr = (LPCTSTR)dlg.m_ssl_keyr;
 		pDoc->m_security_exit = (LPCTSTR)dlg.m_security_exit;
@@ -2255,7 +2251,7 @@ void General::OnSetConnUser()
 	if (pDoc->traceEnabled)
 	{
 		// create the trace line
-		sprintf(traceInfo, " General::OnSetConnUser() rc=%d pDoc->m_conn_use_csp=%d pDoc->m_conn_userid=%s", rc, pDoc->m_conn_use_csp, (LPCTSTR)pDoc->m_conn_userid);
+		sprintf(traceInfo, " General::OnSetConnUser() rc=%d pDoc->m_conn_userid=%s", rc, (LPCTSTR)pDoc->m_conn_userid);
 
 		// trace exit from OnSetConnUser
 		pDoc->logTraceEntry(traceInfo);

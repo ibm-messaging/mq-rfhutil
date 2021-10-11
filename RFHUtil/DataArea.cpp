@@ -238,7 +238,6 @@ DataArea::DataArea()
 
 	m_use_ssl = FALSE;
 	m_ssl_validate = FALSE;
-	m_conn_use_csp = FALSE;
 	m_ssl_reset_count = 0;
 	m_ssl_cipher.Empty();
 	m_local_address.Empty();
@@ -10415,9 +10414,11 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 	slen = m_conn_userid.GetLength();
 	if (slen > 0)
 	{
-		if (m_conn_use_csp && ((clientVersion >= 6) || (0 == clientVersion)))
+		// Allow an override to put passwords in the CD structure if really necessary, but using CSP
+		// is the default (no longer a dialog option)
+		if (!getenv("RFHUTIL_PASSWORD_CD") && ((clientVersion >= 6) || (0 == clientVersion)))
 		{
-			// use an MQCSD
+			// use an MQCSP
 			// this will require that the client and the queue manager be at least V6
 			// set the length and address of the user id
 			csp.CSPUserIdLength = slen;
@@ -10471,7 +10472,7 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 		if (traceEnabled)
 		{
 			// create the trace line - do not trace passwords. But indicate if one were set.
-			sprintf(traceInfo, "DataArea::connect2QM() using m_conn_userid=%s password set=%s m_conn_use_csp=%d clientVersion=%d", (LPCTSTR)m_conn_userid, (m_conn_password.GetLength() > 0) ? "Y":"N", m_conn_use_csp, clientVersion);
+			sprintf(traceInfo, "DataArea::connect2QM() using m_conn_userid=%s password set=%s clientVersion=%d", (LPCTSTR)m_conn_userid, (m_conn_password.GetLength() > 0) ? "Y":"N", clientVersion);
 
 			// log the data to the trace file
 			logTraceEntry(traceInfo);
@@ -10753,7 +10754,7 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 	if (traceEnabled)
 	{
 		// create the trace line
-		sprintf(traceInfo, "DataArea::connect2QM() qmPtr=%s mqserver=%s serverPtr=%s transType=%d m_conn_use_csp=%d m_use_ssl=%d m_ssl_cipher=%s", qmPtr, mqserver, serverPtr, transType, m_conn_use_csp, m_use_ssl, (LPCTSTR)m_ssl_cipher);
+		sprintf(traceInfo, "DataArea::connect2QM() qmPtr=%s mqserver=%s serverPtr=%s transType=%d m_use_ssl=%d m_ssl_cipher=%s", qmPtr, mqserver, serverPtr, transType, m_use_ssl, (LPCTSTR)m_ssl_cipher);
 
 		// trace entry to connect2QM
 		logTraceEntry(traceInfo);
@@ -10833,7 +10834,6 @@ bool DataArea::connect2QM(LPCTSTR QMname)
 
 #ifdef MQCLIENT
 	// remember the SSL parameters that were used
-	app->initUseCSP = m_conn_use_csp;
 	app->initUseSSL = m_use_ssl;
 	app->initSSLCipherSpec = m_ssl_cipher;
 	app->initSSLKeyR = m_ssl_keyr;

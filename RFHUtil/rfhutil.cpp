@@ -72,7 +72,6 @@ static char THIS_FILE[] = __FILE__;
 #define RFHUTIL_MOST_RECENT_REMOTE	"RemoteQMgr"
 
 // extra information that is saved for client connections
-#define RFHUTIL_MOST_RECENT_USE_CSP			"useCSP"
 #define RFHUTIL_MOST_RECENT_USE_SSL			"useSSL"
 #define RFHUTIL_MOST_RECENT_CIPHER_SPEC		"SSLCipherSpec"
 #define RFHUTIL_MOST_RECENT_SSL_KEYR		"SSLKeyR"
@@ -160,7 +159,6 @@ CRfhutilApp::CRfhutilApp()
 	initSSLResetCount = 0;
 	initUseSSL = FALSE;
 	initSSLValidateClient = FALSE;
-	initUseCSP = FALSE;
 	m_enableRecentFileList = TRUE;
 	auditFileName = NULL;
 	numMonitors = 0;
@@ -1484,8 +1482,6 @@ void CRfhutilApp::SaveLastUsedQNames()
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_CONN_LOC_ADDR, (LPCTSTR)initLocalAddress);
 
 #ifdef MQCLIENT
-	sprintf(tempNum, "%d", initUseCSP);
-	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_USE_CSP, tempNum);
 	sprintf(tempNum, "%d", initUseSSL);
 	WriteProfileString(sectionName, RFHUTIL_MOST_RECENT_USE_SSL, tempNum);
 	sprintf(tempNum, "%d", initSSLValidateClient);
@@ -1534,13 +1530,6 @@ void CRfhutilApp::GetLastUsedQNames()
 	initFilePath = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_FILE_PATH, NULL);
 
 #ifdef MQCLIENT
-	// if this is the client version check for saved CSP values in the registry
-	tempNum.Empty();
-	tempNum = GetProfileString(sectionName, RFHUTIL_MOST_RECENT_USE_CSP, NULL);
-	if (tempNum.GetLength() > 0)
-	{
-		initUseCSP = atoi((LPCTSTR)tempNum);
-	}
 
 	// if this is the client version check for saved SSL values in the registry
 	tempNum.Empty();
@@ -1582,7 +1571,7 @@ void CRfhutilApp::GetLastUsedQNames()
 	{
 #ifdef MQCLIENT
 		// create trace entry for the SSL entries
-		sprintf(traceInfo, "Exiting CRfhutilApp::GetLastUsedQNames() initUseCSP=%d initUseSSL=%d, initSSLCipherSpec=%s initSSLValidateClient=%d initSSLKeyR=%s initSSLResetCount=%d", initUseCSP, initUseSSL, (LPCTSTR)initSSLCipherSpec, initSSLValidateClient, (LPCTSTR)initSSLKeyR, initSSLResetCount);
+		sprintf(traceInfo, "Exiting CRfhutilApp::GetLastUsedQNames() initUseSSL=%d, initSSLCipherSpec=%s initSSLValidateClient=%d initSSLKeyR=%s initSSLResetCount=%d", initUseSSL, (LPCTSTR)initSSLCipherSpec, initSSLValidateClient, (LPCTSTR)initSSLKeyR, initSSLResetCount);
 
 		// write the data to the trace
 		logTraceEntry(traceInfo);

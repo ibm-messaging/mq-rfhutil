@@ -1039,7 +1039,7 @@ BEGIN
     EDITTEXT        IDC_CONN_SSL_KEYR,23,183,214,14,ES_AUTOHSCROLL
     CONTROL         "&SSL",IDC_CONN_USE_SSL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,206,29,10
     CONTROL         "SS&L Client Validation",IDC_CONN_VALIDATE_CLIENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,219,81,10
-    COMBOBOX        IDC_CONN_SSL_CIPHER,23,243,177,120,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CONN_SSL_CIPHER,23,243,177,120,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     EDITTEXT        IDC_CONN_SSL_RESET_COUNT,23,270,54,14,ES_AUTOHSCROLL | ES_NUMBER
     DEFPUSHBUTTON   "OK",IDOK,261,269,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,261,246,50,14
@@ -1236,8 +1236,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 9,1,5,232
- PRODUCTVERSION 9,1,5,232
+ FILEVERSION 9,1,6,233
+ PRODUCTVERSION 9,1,6,233
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -1254,12 +1254,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "IBM Corporation"
             VALUE "FileDescription", "RFHUtil: IBM MQ Message test and display utility"
-            VALUE "FileVersion", "9.1.5.232"
+            VALUE "FileVersion", "9.1.6.233"
             VALUE "InternalName", "rfhutil V9.1.5"
             VALUE "LegalCopyright", "Copyright (C) IBM Corporation 2000-2021"
             VALUE "OriginalFilename", "rfhutil.exe"
             VALUE "ProductName", "IBM MQ Message Test and Display Utility"
-            VALUE "ProductVersion", "9.1.5.232"
+            VALUE "ProductVersion", "9.1.6.233"
         END
     END
     BLOCK "VarFileInfo"

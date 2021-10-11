@@ -45,7 +45,6 @@ public:
 	CString	m_security_exit;
 	CString	m_security_data;
 	CString m_local_address;
-	BOOL	m_conn_use_csp;
 	//}}AFX_DATA
 
 
